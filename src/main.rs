@@ -19,6 +19,12 @@ struct Package {
 }
 
 fn main() {
+    // Get information from Cargo.toml
+    const NAME: &'static str = env!("CARGO_PKG_NAME");
+    const VERSION: &'static str = env!("CARGO_PKG_VERSION");
+    const AUTHORS: &'static str = env!("CARGO_PKG_AUTHORS");
+    const DESCRIPTION: &'static str = env!("CARGO_PKG_DESCRIPTION");
+
     // Default settings
     let settings = Settings {
         verbose: false,
@@ -31,10 +37,10 @@ fn main() {
     // TODO: paths
 
     // Argument parsing
-    let app = App::new("rvpkg")
-        .version("6.0")
-        .about("LFS Package Tracking System")
-        .author("Michael Rivnak")
+    let app = App::new(NAME)
+        .version(VERSION)
+        .about(DESCRIPTION)
+        .author(AUTHORS)
         .arg(Arg::with_name("verbose")
             .short("v")
             .long("verbose")
@@ -58,6 +64,20 @@ fn main() {
                 .required(true)
                 .min_values(1)
             )
+        )
+        .subcommand(SubCommand::with_name("check")
+            .about("Displays information about a package")
+            .arg(Arg::with_name("PACKAGE")
+                .help("Package(s) to check")
+                .required(true)
+                .min_values(1)
+            )
+        )
+        .subcommand(SubCommand::with_name("count")
+            .about("Displays the number of installed packages")
+        )
+        .subcommand(SubCommand::with_name("list")
+            .about("Displays the list of installed packages")
         );
 
     let matches = app.get_matches();
