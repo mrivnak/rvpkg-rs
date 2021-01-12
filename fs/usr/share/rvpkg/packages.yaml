@@ -6033,10 +6033,7 @@ packages:
       - libssh2
   rvpkg:
     req:
-      - python
-      - pyyaml
-      - more-termcolor
-      - beautifultable
+      - rustc
   more-termcolor:
     req:
       - python
