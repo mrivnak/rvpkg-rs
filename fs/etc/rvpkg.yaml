@@ -1,0 +1,6 @@
+config:
+  verbose: False
+  default_yes: True
+  no_confirm: False
+  runtime: False
+  show_deps: False
