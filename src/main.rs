@@ -1,7 +1,6 @@
 use clap::{Arg, App, AppSettings, SubCommand};
 
 mod util;
-mod yaml;
 
 struct Settings {
     verbose:    bool,
