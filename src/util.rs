@@ -42,6 +42,40 @@ pub mod pkg {
 
         for pkg in in_pkgs {
             // TODO: add handling for roughly matching package names
+            let mut matches: Vec<String> = Vec::new();
+            for name in package_names {
+                if name.contains(pkg.as_str()) {
+                    matches.push(name);
+                }
+            }
+
+            match matches.len() {
+                0 => {}  // TODO: exit
+                1 => {}  // Continue
+                _ => {
+                    loop {
+                        println!("Package \"{}\" has multiple matches...", pkg);
+                        for (i, n) in matches.iter().enumerate() {
+                            println!("{} {}", i + 1, pkg);
+                        
+                        }
+
+                        let index: String = text_io::read!("{}\n");
+
+                        if index.parse::<u16>().is_ok() &&
+                            index.parse::<u16>().unwrap() > 0 &&
+                            index.parse::<u16>().unwrap() < matches.len() as u16 {
+                            let index = index.parse::<u16>().unwrap();
+                            break;
+                        }
+                        else {
+                            // TODO: error out and try again
+                            continue;
+                        }
+                    }
+                }
+            }
+
             match package_data.get(pkg) {
                 Some(&package) => {
                     out_pkgs.push(super::data::Package {
@@ -49,7 +83,7 @@ pub mod pkg {
                         ..package
                     })
                 }
-                _ => {}  // TODO: handle when a package is not found
+                _ => unreachable!()
             }
         }
 
