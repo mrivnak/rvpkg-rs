@@ -1,21 +1,13 @@
-use clap::{Arg, App, SubCommand};
+use clap::{Arg, App, AppSettings, SubCommand};
+
+mod util;
+mod yaml;
 
 struct Settings {
     verbose:    bool,
     no_confirm: bool,
     runtime:    bool,
     show_deps:  bool
-}
-
-struct Package {
-    name: String,
-    installed: bool,
-    req_deps: Vec<String>,
-    rec_deps: Vec<String>,
-    opt_deps: Vec<String>,
-    req_run_deps: Vec<String>,
-    rec_run_deps: Vec<String>,
-    opt_run_deps: Vec<String>
 }
 
 fn main() {
@@ -33,6 +25,7 @@ fn main() {
         .version(VERSION)
         .about(DESCRIPTION)
         .author(AUTHORS)
+        .setting(AppSettings::SubcommandRequiredElseHelp)
         .arg(Arg::with_name("verbose")
             .short("v")
             .long("verbose")
@@ -111,7 +104,56 @@ fn main() {
         runtime: matches.is_present("runtime"),
         show_deps: matches.is_present("show-deps")
     };
+
+    let mut packages: Vec<util::data::Package> = Vec::new();
+
+
+
+    match matches.subcommand_name() {
+        Some("add") => {
+            add(settings, packages.as_slice());
+        },
+        Some("built-with") => {},
+        Some("check") => {},
+        Some("count") => {},
+        Some("list") => {},
+        Some("search") => {},
+        Some("tail") => {},
+        _ => {}
+    }
 }
+
+// ###### Subcommand Functions ######
+
+fn add(settings: Settings, packages: &[util::data::Package]) {
+
+}
+
+fn built_with(settings: Settings) {
+
+}
+
+fn check(settings: Settings) {
+
+}
+
+fn count(settings: Settings) {
+
+}
+
+fn list(settings: Settings) {
+
+}
+
+fn search(settings: Settings) {
+
+}
+
+fn tail(settings: Settings) {
+
+}
+
+// Miscellaneous Functions
 
 fn is_pos_int(s: String) -> Result<(), String> {
     let test = s.parse::<u64>().is_ok();
