@@ -12,12 +12,18 @@ pub mod io {
 
         return data;
     }
+
+    pub fn write_lines(lines: Vec<String>) {
+        // TODO: write lines to database file
+    }
 }
 
 pub mod pkg {
     pub fn get_stripped_log(log: &[String]) -> Vec<String> {
         let mut out = Vec::new();
 
+        // TODO: reimplement by sorting and removing duplicates
+        // should be much faster that way
         for package in log {
             if !out.contains(package) {
                 out.push(package.to_string());
@@ -68,10 +74,15 @@ mod yaml {
     use std::collections::HashMap;
 
     pub fn get_package_data() -> HashMap<String, super::data::Package> {
-
+        // TODO: return a map of package names and data
     }
 
     pub fn get_package_names() -> Vec<String> {
-        
+        // TODO: return a list of package names
+    }
+
+    pub fn new_package(package: super::data::Package) {
+        // TODO: add package to database
+        // should provide formatted lines to super::io::write_lines()
     }
 }

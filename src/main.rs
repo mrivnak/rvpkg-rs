@@ -67,6 +67,9 @@ fn main() {
         .subcommand(SubCommand::with_name("list")
             .about("Displays the list of installed packages")
         )
+        .subcommand(SubCommand::with_name("new")
+            .about("Interactively adds a new package to the database")
+        )
         .subcommand(SubCommand::with_name("search")
             .about("Searches for a package")
             .arg(Arg::with_name("SEARCH")
@@ -116,6 +119,7 @@ fn main() {
         Some("check") => {},
         Some("count") => {},
         Some("list") => {},
+        Some("new") => {},
         Some("search") => {},
         Some("tail") => {},
         _ => {}
@@ -125,31 +129,35 @@ fn main() {
 // ###### Subcommand Functions ######
 
 fn add(settings: Settings, packages: &[util::data::Package]) {
-
+    // TODO: implement add
 }
 
 fn built_with(settings: Settings) {
-
+    // TODO: implement built with
 }
 
 fn check(settings: Settings) {
-
+    // TODO: implement check
 }
 
 fn count(settings: Settings) {
-
+    // TODO: implement count
 }
 
 fn list(settings: Settings) {
+    // TODO: implement list
+}
 
+fn new(settings: Settings) {
+    // TODO: implement new
 }
 
 fn search(settings: Settings) {
-
+    // TODO: implement search
 }
 
 fn tail(settings: Settings) {
-
+    // TODO: implement tail
 }
 
 // Miscellaneous Functions
