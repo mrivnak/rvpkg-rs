@@ -115,13 +115,14 @@ fn main() {
             add(settings, packages.as_slice());
         },
         ("built-with", Some(sub_matches)) => {
-            let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();
-            let packages = util::pkg::parse_packages(packages.as_slice());
+            let package = sub_matches.value_of("PACKAGE").unwrap();
+            let package = util::pkg::parse_packages(vec![String::from(package)]);
+            let package = package.first().unwrap().clone();
 
-            let (head, tail) = packages.split_at(1);
-            let head = head.first().unwrap().clone();
+            let dependencies: Vec<String> = sub_matches.values_of("DEPENDENCIES").unwrap().map(|x| String::from(x)).collect();
+            let dependencies = util::pkg::parse_packages(dependencies.as_slice());
 
-            built_with(settings, head, tail);
+            built_with(settings, package, dependencies.as_slice());
         },
         ("check", Some(sub_matches)) => {
             let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();
