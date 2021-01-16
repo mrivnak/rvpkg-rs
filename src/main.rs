@@ -16,9 +16,6 @@ fn main() {
     const AUTHORS: &'static str = env!("CARGO_PKG_AUTHORS");
     const DESCRIPTION: &'static str = env!("CARGO_PKG_DESCRIPTION");
 
-    // Setup file paths
-    // TODO: paths
-
     // Argument parsing
     let app = App::new(NAME)
         .version(VERSION)
@@ -116,7 +113,7 @@ fn main() {
         },
         ("built-with", Some(sub_matches)) => {
             let package = sub_matches.value_of("PACKAGE").unwrap();
-            let package = util::pkg::parse_packages(vec![String::from(package)]);
+            let package = util::pkg::parse_packages(vec![String::from(package)].as_slice());
             let package = package.first().unwrap().clone();
 
             let dependencies: Vec<String> = sub_matches.values_of("DEPENDENCIES").unwrap().map(|x| String::from(x)).collect();
