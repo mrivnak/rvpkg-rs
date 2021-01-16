@@ -1,13 +1,36 @@
 pub mod io {
     pub fn get_log() -> Vec<String> {
         let contents = std::fs::read_to_string("/var/lib/rvpkg/packages.log").expect("Unable to read package log");
+
+        if contents == "Unable to read package db" {
+            eprintln!("Error: Unable to read package log");
+            std::process::exit(1);
+        }
+
         let data: Vec<String> = contents.lines().map(String::from).collect();
 
         return data;
     }
 
-    pub fn get_db() -> Vec<String> {
-        let contents = std::fs::read_to_string("/var/lib/rvpkg/packages.log").expect("Unable to read package log");
+    pub fn get_db() -> String {
+        let contents = std::fs::read_to_string("/var/lib/rvpkg/packages.log").expect("Unable to read package db");
+
+        if contents == "Unable to read package db" {
+            eprintln!("Error: Unable to read package db");
+            std::process::exit(1);
+        }
+
+        return contents
+    }
+
+    pub fn get_db_lines() -> Vec<String> {
+        let contents = std::fs::read_to_string("/usr/share/rvpkg/packages.yaml").expect("Unable to read package db");
+
+        if contents == "Unable to read package db" {
+            eprintln!("Error: Unable to read package db");
+            std::process::exit(1);
+        }
+
         let data: Vec<String> = contents.lines().map(String::from).collect();
 
         return data;
@@ -40,50 +63,58 @@ pub mod pkg {
         let package_data = super::yaml::get_package_data();
         let package_names = super::yaml::get_package_names();
 
-        for pkg in in_pkgs {
+        for pkg in in_pkgs.iter_mut() {
             // TODO: add handling for roughly matching package names
             let mut matches: Vec<String> = Vec::new();
-            for name in package_names {
+            for name in &package_names {
                 if name.contains(pkg.as_str()) {
-                    matches.push(name);
+                    matches.push(name.to_string());
                 }
             }
 
             match matches.len() {
-                0 => {}  // TODO: exit
+                0 => {
+                    eprintln!("Error: Package \"{}\" not found in database. Exiting...", pkg);
+                    std::process::exit(1);
+                }
                 1 => {}  // Continue
                 _ => {
                     loop {
                         println!("Package \"{}\" has multiple matches...", pkg);
                         for (i, n) in matches.iter().enumerate() {
-                            println!("{} {}", i + 1, pkg);
+                            println!("{} {}", i + 1, n);
                         }
 
+                        print!("Package # to select: ");
                         let index: String = text_io::read!("{}\n");
 
                         if index.parse::<u16>().is_ok() &&
-                            index.parse::<u16>().unwrap() > 0 &&
-                            index.parse::<u16>().unwrap() < matches.len() as u16 {
+                                index.parse::<u16>().unwrap() > 0 &&
+                                index.parse::<u16>().unwrap() < matches.len() as u16 {
+
                             let index = index.parse::<usize>().unwrap();
-                            let pkg = matches.get(index);
+                            *pkg = matches.get(index)
+                                .expect(format!("Error: Package \"{}\" not found in database. Exiting... (this should be unreachable)", pkg)
+                                .as_str()).clone();  // replace 'pkg' with the selected package name
                             break;
                         }
                         else {
-                            // TODO: error out and try again
+                            eprintln!("Error: Invalid selection");
                             continue;
                         }
                     }
                 }
             }
 
-            match package_data.get(pkg) {
-                Some(&package) => {
+            match package_data.get(pkg) {  // get package from the database hashmap
+                Some(package) => {
+                    let new_package: super::data::Package = package.clone();
                     out_pkgs.push(super::data::Package {
                         installed: log.contains(&package.name),
-                        ..package
-                    })
+                        ..new_package
+                    })  // Update package data with installation status
                 }
-                _ => unreachable!()
+                _ => unreachable!()  // Already checked if the package is in the hashmap, should be unreachable
             }
         }
 
@@ -92,6 +123,7 @@ pub mod pkg {
 }
 
 pub mod data {
+    #[derive(Clone)]  // Implement clone trait for package
     pub struct Package {
         pub name: String,
         pub installed: bool,
@@ -106,13 +138,19 @@ pub mod data {
 
 mod yaml {
     use std::collections::HashMap;
+    use yaml_rust::{YamlEmitter, YamlLoader};
 
     pub fn get_package_data() -> HashMap<String, super::data::Package> {
         // TODO: return a map of package names and data
+        let data = YamlLoader::load_from_str(super::io::get_db().as_str()).unwrap();
+
+        // TODO: translate yaml into  package data
+        let out: HashMap<String, super::data::Package> = HashMap::new();
+        return out;
     }
 
     pub fn get_package_names() -> Vec<String> {
-        // TODO: return a list of package names
+        return get_package_data().keys().cloned().collect();
     }
 
     pub fn new_package(package: super::data::Package) {
