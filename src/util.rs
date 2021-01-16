@@ -57,32 +57,32 @@ pub mod pkg {
         return out;
     }
 
-    pub fn parse_packages(in_pkgs: &mut [String]) -> Vec<super::data::Package> {
+    pub fn parse_packages(in_pkgs: &[String]) -> Vec<super::data::Package> {
         let mut out_pkgs: Vec<super::data::Package> = Vec::new();
         let log: Vec<String> = super::io::get_log().to_vec();
         let package_data = super::yaml::get_package_data();
         let package_names = super::yaml::get_package_names();
 
-        for pkg in in_pkgs.iter_mut() {
-            // TODO: add handling for roughly matching package names
+        for pkg in in_pkgs {
+            let mut meta_pkg = pkg.clone();
             let mut matches: Vec<String> = Vec::new();
             for name in &package_names {
-                if name.contains(pkg.as_str()) {
+                if name.contains(pkg.as_str()) {  // Find a list of matching package names
                     matches.push(name.to_string());
                 }
             }
 
             match matches.len() {
                 0 => {
-                    eprintln!("Error: Package \"{}\" not found in database. Exiting...", pkg);
+                    eprintln!("Error: Package \"{}\" not found in database. Exiting...", meta_pkg);
                     std::process::exit(1);
                 }
                 1 => {}  // Continue
                 _ => {
                     loop {
-                        println!("Package \"{}\" has multiple matches...", pkg);
+                        println!("Package \"{}\" has multiple matches...", meta_pkg);
                         for (i, n) in matches.iter().enumerate() {
-                            println!("{} {}", i + 1, n);
+                            println!("{} {}", i + 1, n);  // Print matching package names
                         }
 
                         print!("Package # to select: ");
@@ -90,12 +90,12 @@ pub mod pkg {
 
                         if index.parse::<u16>().is_ok() &&
                                 index.parse::<u16>().unwrap() > 0 &&
-                                index.parse::<u16>().unwrap() < matches.len() as u16 {
+                                index.parse::<u16>().unwrap() < matches.len() as u16 {  // Verify that the input is a u16 and is within the range of matches
 
                             let index = index.parse::<usize>().unwrap();
-                            *pkg = matches.get(index)
-                                .expect(format!("Error: Package \"{}\" not found in database. Exiting... (this should be unreachable)", pkg)
-                                .as_str()).clone();  // replace 'pkg' with the selected package name
+                            meta_pkg = matches.get(index)
+                                .expect(format!("Error: Package \"{}\" not found in database. Exiting... (this should be unreachable)", meta_pkg)
+                                .as_str()).clone();  // replace 'meta_pkg' with the selected package name
                             break;
                         }
                         else {
@@ -106,7 +106,7 @@ pub mod pkg {
                 }
             }
 
-            match package_data.get(pkg) {  // get package from the database hashmap
+            match package_data.get(&meta_pkg) {  // get package from the database hashmap
                 Some(package) => {
                     let new_package: super::data::Package = package.clone();
                     out_pkgs.push(super::data::Package {
@@ -150,7 +150,10 @@ mod yaml {
     }
 
     pub fn get_package_names() -> Vec<String> {
-        return get_package_data().keys().cloned().collect();
+        return get_package_data()
+            .keys()
+            .cloned()
+            .collect();
     }
 
     pub fn new_package(package: super::data::Package) {
