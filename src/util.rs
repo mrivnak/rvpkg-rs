@@ -57,7 +57,6 @@ pub mod pkg {
                         println!("Package \"{}\" has multiple matches...", pkg);
                         for (i, n) in matches.iter().enumerate() {
                             println!("{} {}", i + 1, pkg);
-                        
                         }
 
                         let index: String = text_io::read!("{}\n");
@@ -65,7 +64,8 @@ pub mod pkg {
                         if index.parse::<u16>().is_ok() &&
                             index.parse::<u16>().unwrap() > 0 &&
                             index.parse::<u16>().unwrap() < matches.len() as u16 {
-                            let index = index.parse::<u16>().unwrap();
+                            let index = index.parse::<usize>().unwrap();
+                            let pkg = matches.get(index);
                             break;
                         }
                         else {
