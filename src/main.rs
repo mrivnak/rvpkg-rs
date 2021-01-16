@@ -107,10 +107,6 @@ fn main() {
         show_deps: matches.is_present("show-deps")
     };
 
-    // let packages: Vec<String> = Vec::new();
-
-    // let packages: Vec<util::data::Package> = util::pkg::parse_packages(in_pkgs: &mut [String]);
-
     match matches.subcommand() {
         ("add", Some(sub_matches)) => {
             let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();  // Get package arguments
@@ -122,12 +118,10 @@ fn main() {
             let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();
             let packages = util::pkg::parse_packages(packages.as_slice());
 
-            let package = packages.first().unwrap().clone(); // Separate the head from the tail of the vector
-            let mut dependencies = packages.clone();
-            dependencies.remove(0);
-            let dependencies = dependencies;
+            let (head, tail) = packages.split_at(1);
+            let head = head.first().unwrap().clone();
 
-            built_with(settings, package, dependencies.as_slice());
+            built_with(settings, head, tail);
         },
         ("check", Some(sub_matches)) => {
             let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();
@@ -135,13 +129,13 @@ fn main() {
 
             check(settings, packages.as_slice());
         },
-        ("count", Some(sub_matches)) => {
+        ("count", _) => {
             count(settings);
         },
-        ("list", Some(sub_matches)) => {
+        ("list", _) => {
             list(settings);
         },
-        ("new", Some(sub_matches)) => {
+        ("new", _) => {
             new(settings);
         },
         ("search", Some(sub_matches)) => {
