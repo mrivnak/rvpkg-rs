@@ -6,7 +6,8 @@ struct Settings {
     verbose:    bool,
     no_confirm: bool,
     runtime:    bool,
-    show_deps:  bool
+    show_deps:  bool,
+    color:      bool
 }
 
 fn main() {
@@ -14,7 +15,9 @@ fn main() {
     const NAME: &'static str = env!("CARGO_PKG_NAME");
     const VERSION: &'static str = env!("CARGO_PKG_VERSION");
     const AUTHORS: &'static str = env!("CARGO_PKG_AUTHORS");
-    const DESCRIPTION: &'static str = env!("CARGO_PKG_DESCRIPTION");
+    const DESCRIPTION: &'static str = env!("CARGO_PKG_DESCRIPTION"); 
+
+    // Get settings from rvpkg.toml
 
     // Argument parsing
     let app = App::new(NAME)
@@ -41,6 +44,11 @@ fn main() {
             .short("d")
             .long("show-deps")
             .help("Display package dependencies")
+            .global(true))
+        .arg(Arg::with_name("color")
+            .short("c")
+            .long("color")
+            .help("Display colored output")
             .global(true))
         .subcommand(SubCommand::with_name("add")
             .about("Adds package(s) to the system package list")
@@ -101,7 +109,8 @@ fn main() {
         verbose: matches.is_present("verbose"),
         no_confirm: matches.is_present("no_confirm"),
         runtime: matches.is_present("runtime"),
-        show_deps: matches.is_present("show-deps")
+        show_deps: matches.is_present("show-deps"),
+        color: matches.is_present("color")
     };
 
     match matches.subcommand() {

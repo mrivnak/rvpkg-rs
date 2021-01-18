@@ -1,0 +1,99 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug",
+            "program": "${workspaceFolder}/target/debug/rvpkg",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug | add",
+            "program": "${workspaceFolder}/target/debug/rvpkg",
+            "args": [
+                "add",
+                "gcc"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug | built-with",
+            "program": "${workspaceFolder}/target/debug/rvpkg",
+            "args": [
+                "built-with",
+                "gcc",
+                "systemd"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug | check",
+            "program": "${workspaceFolder}/target/debug/rvpkg",
+            "args": [
+                "check",
+                "gcc"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug | count",
+            "program": "${workspaceFolder}/target/debug/rvpkg",
+            "args": [
+                "count"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug | list",
+            "program": "${workspaceFolder}/target/debug/rvpkg",
+            "args": [
+                "list"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug | new",
+            "program": "${workspaceFolder}/target/debug/rvpkg",
+            "args": [
+                "new"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug | search",
+            "program": "${workspaceFolder}/target/debug/rvpkg",
+            "args": [
+                "python"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug | tail",
+            "program": "${workspaceFolder}/target/debug/rvpkg",
+            "args": [
+                "tail",
+                "-n",
+                "6"
+            ],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
