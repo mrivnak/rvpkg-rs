@@ -64,9 +64,9 @@ pub mod pkg {
         let mut out_pkgs: Vec<super::data::Package> = Vec::new();
 
         for pkg in in_pkgs {
-            let mut meta_pkg = pkg.clone();
+            let meta_pkg = pkg.clone();
 
-            if super::db::has_package(meta_pkg) {
+            if super::db::has_package(&meta_pkg) {
                 out_pkgs.push(super::db::get_package(meta_pkg));
             }
             else {
@@ -84,9 +84,19 @@ mod db {
         // TODO: returns a package struct for the specified package
 
         // TODO: get data from sled db and insert into struct
+        return super::data::Package {
+            name: String::from(""),
+            installed: false,
+            req_deps: Vec::new(),
+            rec_deps: Vec::new(),
+            opt_deps: Vec::new(),
+            req_run_deps: Vec::new(),
+            rec_run_deps: Vec::new(),
+            opt_run_deps: Vec::new()
+        };
     }
 
-    pub fn has_package(package: String) -> bool {
+    pub fn has_package(package: &String) -> bool {
         // TODO: query db for a package matching the specified name
         return false;
     }
