@@ -75,6 +75,13 @@ fn main() {
         .subcommand(SubCommand::with_name("new")
             .about("Interactively adds a new package to the database")
         )
+        .subcommand(SubCommand::with_name("delete")
+            .about("Deletes a package from the database")
+            .arg(Arg::with_name("PACKAGE")
+                .help("Package to delete")
+                .required(true)
+            )
+        )
         .subcommand(SubCommand::with_name("search")
             .about("Searches for a package")
             .arg(Arg::with_name("SEARCH")
@@ -100,6 +107,13 @@ fn main() {
                 .help("Number of lines to display")
                 .default_value("5")  // Will convert to int later
                 .validator(is_pos_int)
+            )
+        )
+        .subcommand(SubCommand::with_name("import")
+            .about("Imports a package database from a csv file")
+            .arg(Arg::with_name("PATH")
+                .help("Path to CSV file")
+                // .validator(is_pos_int)  // TODO: try adding a path validator here
             )
         );
 
@@ -145,6 +159,10 @@ fn main() {
         ("new", _) => {
             new(&settings);
         },
+        ("delete", Some(sub_matches)) => {
+            let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();
+            delete(&settings, packages.as_slice());
+        },
         ("search", Some(sub_matches)) => {
             let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();
             search(&settings, packages.as_slice());
@@ -183,7 +201,11 @@ fn new(settings: &Settings) {
     // TODO: implement new
 }
 
-fn search(settings: &Settings, packages: &[String]) {
+fn delete(settings: &Settings, package: &[String]) {
+    // TODO: implement delete
+}
+
+fn search(settings: &Settings, package: &[String]) {
     // TODO: implement search
 }
 

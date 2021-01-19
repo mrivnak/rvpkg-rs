@@ -124,7 +124,7 @@ mod db {
 
         let has = db.contains_key(package).unwrap();
 
-        let _result = db.flush();
+        let _ = db.flush();
 
         return has;
     }
@@ -134,5 +134,13 @@ mod db {
         let db: sled::Db = sled::open("/usr/share/rvpkg/packages.db").unwrap();
 
         let _ = db.insert(&package.name, package.dep_string().as_str());
+        let _ = db.flush();
+    }
+
+    pub fn add_raw(name: &String, deps: &String) {
+        let db: sled::Db = sled::open("/usr/share/rvpkg/packages.db").unwrap();
+
+        let _ = db.insert(name.as_str(), deps.as_str());
+        let _ = db.flush();
     }
 }
