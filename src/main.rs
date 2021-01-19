@@ -118,7 +118,7 @@ fn main() {
             let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();  // Get package arguments
             let packages = util::pkg::parse_packages(packages.as_slice());
 
-            add(settings, packages.as_slice());
+            add(&settings, packages.as_slice());
         },
         ("built-with", Some(sub_matches)) => {
             let package = sub_matches.value_of("PACKAGE").unwrap();
@@ -128,30 +128,30 @@ fn main() {
             let dependencies: Vec<String> = sub_matches.values_of("DEPENDENCIES").unwrap().map(|x| String::from(x)).collect();
             let dependencies = util::pkg::parse_packages(dependencies.as_slice());
 
-            built_with(settings, package, dependencies.as_slice());
+            built_with(&settings, package, dependencies.as_slice());
         },
         ("check", Some(sub_matches)) => {
             let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();
             let packages = util::pkg::parse_packages(packages.as_slice());
 
-            check(settings, packages.as_slice());
+            check(&settings, packages.as_slice());
         },
         ("count", _) => {
-            count(settings);
+            count(&settings);
         },
         ("list", _) => {
-            list(settings);
+            list(&settings);
         },
         ("new", _) => {
-            new(settings);
+            new(&settings);
         },
         ("search", Some(sub_matches)) => {
             let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();
-            search(settings, packages.as_slice());
+            search(&settings, packages.as_slice());
         },
         ("tail", Some(sub_matches)) => {
             let lines = sub_matches.value_of("LINES").unwrap().parse::<u64>().unwrap();
-            tail(settings, lines);
+            tail(&settings, lines);
         },
         _ => {}
     }
@@ -159,35 +159,35 @@ fn main() {
 
 // ###### Subcommand Functions ######
 
-fn add(settings: Settings, packages: &[util::data::Package]) {
+fn add(settings: &Settings, packages: &[util::data::Package]) {
     // TODO: implement add
 }
 
-fn built_with(settings: Settings, pkg: util::data::Package, deps: &[util::data::Package]) {
+fn built_with(settings: &Settings, pkg: util::data::Package, deps: &[util::data::Package]) {
     // TODO: implement built with
 }
 
-fn check(settings: Settings, packages: &[util::data::Package]) {
+fn check(settings: &Settings, packages: &[util::data::Package]) {
     // TODO: implement check
 }
 
-fn count(settings: Settings) {
+fn count(settings: &Settings) {
     // TODO: implement count
 }
 
-fn list(settings: Settings) {
+fn list(settings: &Settings) {
     // TODO: implement list
 }
 
-fn new(settings: Settings) {
+fn new(settings: &Settings) {
     // TODO: implement new
 }
 
-fn search(settings: Settings, packages: &[String]) {
+fn search(settings: &Settings, packages: &[String]) {
     // TODO: implement search
 }
 
-fn tail(settings: Settings, lines: u64) {
+fn tail(settings: &Settings, lines: u64) {
     // TODO: implement tail
 }
 

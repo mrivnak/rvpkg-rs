@@ -5,16 +5,39 @@ pub mod cli {
 }
 
 pub mod data {
-    #[derive(Clone)]  // Implement clone trait for package
+    #[derive(Clone, Debug)]  // Implement clone trait for package
     pub struct Package {
         pub name: String,
         pub installed: bool,
-        pub req_deps: Vec<String>,
-        pub rec_deps: Vec<String>,
-        pub opt_deps: Vec<String>,
-        pub req_run_deps: Vec<String>,
-        pub rec_run_deps: Vec<String>,
-        pub opt_run_deps: Vec<String>
+        pub dependencies: Vec<String>
+    }
+
+    impl From::<Package> for String {
+        fn from(package: Package) -> String {
+            return package.name;
+        }
+    }
+
+    impl From::<&Package> for String {
+        fn from(package: &Package) -> String {
+            let meta_package = package.clone();
+            return meta_package.name;
+        }
+    }
+
+    impl Package {
+        pub fn dep_string(&self) -> String {
+            let mut s: String = String::from("");
+
+            for dep in self.dependencies.iter() {
+                s.push_str(dep.as_str());
+                s.push_str("; ")
+            }
+
+            s.trim_end();
+
+            return s;
+        }
     }
 }
 
@@ -67,7 +90,7 @@ pub mod pkg {
             let meta_pkg = pkg.clone();
 
             if super::db::has_package(&meta_pkg) {
-                out_pkgs.push(super::db::get_package(meta_pkg));
+                out_pkgs.push(super::db::get_package(&meta_pkg).unwrap());
             }
             else {
                 eprintln!("Error: Package \"{}\" not found in database, exiting...", meta_pkg);
@@ -80,28 +103,36 @@ pub mod pkg {
 }
 
 mod db {
-    pub fn get_package(package: String) -> super::data::Package {
+    pub fn get_package(package: &String) -> Result<super::data::Package, String> {
         // TODO: returns a package struct for the specified package
+        if !has_package(package) {
+            return Err(String::from("Package not in database"));
+        }
+
+        let db: sled::Db = sled::open("/usr/share/rvpkg/packages.db").unwrap();
 
         // TODO: get data from sled db and insert into struct
-        return super::data::Package {
+        return Ok(super::data::Package {
             name: String::from(""),
             installed: false,
-            req_deps: Vec::new(),
-            rec_deps: Vec::new(),
-            opt_deps: Vec::new(),
-            req_run_deps: Vec::new(),
-            rec_run_deps: Vec::new(),
-            opt_run_deps: Vec::new()
-        };
+            dependencies: Vec::new()
+        });
     }
 
     pub fn has_package(package: &String) -> bool {
-        // TODO: query db for a package matching the specified name
-        return false;
+        let db: sled::Db = sled::open("/usr/share/rvpkg/packages.db").unwrap();
+
+        let has = db.contains_key(package).unwrap();
+
+        let _result = db.flush();
+
+        return has;
     }
 
     pub fn new_package(package: super::data::Package) {
         // TODO: add package to database
+        let db: sled::Db = sled::open("/usr/share/rvpkg/packages.db").unwrap();
+
+        let _ = db.insert(&package.name, package.dep_string().as_str());
     }
 }
