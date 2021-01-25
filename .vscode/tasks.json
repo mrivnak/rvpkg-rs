@@ -1,0 +1,13 @@
+{
+    "tasks": [
+        {
+            "type": "cargo",
+            "subcommand": "build",
+            "problemMatcher": [
+                "$rustc"
+            ],
+            "group": "build",
+            "label": "Rust: cargo build - rvpkg-rs"
+        }
+    ]
+}

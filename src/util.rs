@@ -31,7 +31,7 @@ pub mod data {
 
             for dep in self.dependencies.iter() {
                 s.push_str(dep.as_str());
-                s.push_str("; ")
+                s.push_str("; ");
             }
 
             s.trim_end();
@@ -42,8 +42,8 @@ pub mod data {
 }
 
 pub mod io {
-    pub fn get_log() -> Vec<String> {
-        let contents = std::fs::read_to_string("fs/var/lib/rvpkg/packages.log").expect("Unable to read package log");
+    pub fn get_lines(path: &str) -> Vec<String> {
+        let contents = std::fs::read_to_string(path).expect("Unable to read package log");
 
         if contents == "Unable to read package db" {
             eprintln!("Error: Unable to read package log");
@@ -54,16 +54,8 @@ pub mod io {
 
         return data;
     }
-
-    pub fn get_db() -> String {
-        let contents = std::fs::read_to_string("fs/var/lib/rvpkg/packages.log").expect("Unable to read package db");
-
-        if contents == "Unable to read package db" {
-            eprintln!("Error: Unable to read package db");
-            std::process::exit(1);
-        }
-
-        return contents
+    pub fn get_log() -> Vec<String> {
+        return get_lines("fs/var/lib/rvpkg/packages.log");
     }
 }
 
@@ -102,14 +94,14 @@ pub mod pkg {
     }
 }
 
-mod db {
+pub mod db {
     pub fn get_package(package: &String) -> Result<super::data::Package, String> {
         // TODO: returns a package struct for the specified package
         if !has_package(package) {
             return Err(String::from("Package not in database"));
         }
 
-        let db: sled::Db = sled::open("/usr/share/rvpkg/packages.db").unwrap();
+        let db: sled::Db = sled::open("fs/usr/share/rvpkg/packages.db").unwrap();
 
         // TODO: get data from sled db and insert into struct
         return Ok(super::data::Package {
@@ -120,7 +112,7 @@ mod db {
     }
 
     pub fn has_package(package: &String) -> bool {
-        let db: sled::Db = sled::open("/usr/share/rvpkg/packages.db").unwrap();
+        let db: sled::Db = sled::open("fs/usr/share/rvpkg/packages.db").unwrap();
 
         let has = db.contains_key(package).unwrap();
 
@@ -131,16 +123,21 @@ mod db {
 
     pub fn new_package(package: super::data::Package) {
         // TODO: add package to database
-        let db: sled::Db = sled::open("/usr/share/rvpkg/packages.db").unwrap();
+        let db: sled::Db = sled::open("fs/usr/share/rvpkg/packages.db").unwrap();
 
         let _ = db.insert(&package.name, package.dep_string().as_str());
         let _ = db.flush();
     }
 
     pub fn add_raw(name: &String, deps: &String) {
-        let db: sled::Db = sled::open("/usr/share/rvpkg/packages.db").unwrap();
+        let db: sled::Db = sled::open("fs/usr/share/rvpkg/packages.db").unwrap();
 
         let _ = db.insert(name.as_str(), deps.as_str());
         let _ = db.flush();
+    }
+
+    pub fn import_csv(path: &String) {
+        let db: sled::Db = sled::open("fs/usr/share/rvpkg/packages.db").unwrap();
+
     }
 }

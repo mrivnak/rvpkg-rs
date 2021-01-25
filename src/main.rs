@@ -113,7 +113,8 @@ fn main() {
             .about("Imports a package database from a csv file")
             .arg(Arg::with_name("PATH")
                 .help("Path to CSV file")
-                // .validator(is_pos_int)  // TODO: try adding a path validator here
+                .required(true)
+                .validator(file_exists)  // TODO: try adding a path validator here
             )
         );
 
@@ -171,6 +172,11 @@ fn main() {
             let lines = sub_matches.value_of("LINES").unwrap().parse::<u64>().unwrap();
             tail(&settings, lines);
         },
+        ("import", Some(sub_matches)) => {
+            let path = String::from(sub_matches.value_of("PATH").unwrap());
+
+            import(&settings, &path);
+        }
         _ => {}
     }
 }
@@ -213,10 +219,20 @@ fn tail(settings: &Settings, lines: u64) {
     // TODO: implement tail
 }
 
+fn import(settings: &Settings, path: &String) {
+    // TODO: implement import
+    // TODO: 
+    util::db::import_csv(path);
+}
+
 // Miscellaneous Functions
 
 fn is_pos_int(s: String) -> Result<(), String> {
     let test = s.parse::<u64>().is_ok();
 
     return if test { return Ok(()); } else { Err(String::from("Value must be a positive integer")) };
+}
+
+fn file_exists(s: String) -> Result<(), String> {
+    return if std::path::Path::new(s.as_str()).exists() { return Ok(()); } else { Err(String::from("Error: file not found!")) };
 }
