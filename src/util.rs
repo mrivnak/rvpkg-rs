@@ -136,8 +136,27 @@ pub mod db {
         let _ = db.flush();
     }
 
-    pub fn import_csv(path: &String) {
+    pub fn import_csv(path: &String, mode: bool) {
         let db: sled::Db = sled::open("fs/usr/share/rvpkg/packages.db").unwrap();
 
+        if mode {
+            let _ = db.clear();
+        }
+
+        for line in super::io::get_lines(path.as_str()) {
+            let items: Vec<&str> = line.split_terminator(",").collect();
+            if items.len() != 2 {
+                eprintln!("Error: invalid line in csv, ignoring...");
+                eprintln!("Error: line: {}", line);
+            }
+            else {
+                let package = items[0];
+                let deps = items[1];
+
+                let _ = db.insert(package, deps);
+            }
+        }
+
+        let _ = db.flush();
     }
 }

@@ -221,8 +221,14 @@ fn tail(settings: &Settings, lines: u64) {
 
 fn import(settings: &Settings, path: &String) {
     // TODO: implement import
-    // TODO: 
-    util::db::import_csv(path);
+
+    // TODO: ask if user would like to merge or replace
+    // abort if user hits enter with no option specified
+    // Modes:
+    // false: merge
+    // true: replace
+
+    util::db::import_csv(path, false);
 }
 
 // Miscellaneous Functions
