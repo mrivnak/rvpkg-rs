@@ -114,7 +114,7 @@ fn main() {
             .arg(Arg::with_name("PATH")
                 .help("Path to CSV file")
                 .required(true)
-                .validator(file_exists)  // TODO: try adding a path validator here
+                .validator(file_exists)
             )
         );
 
