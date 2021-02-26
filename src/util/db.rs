@@ -1,4 +1,4 @@
-use crate::util::io;
+// use crate::util::io;
 
 pub struct DB {
     pub path: String,
@@ -33,11 +33,7 @@ impl DB {
     }
 
     pub fn new_package(&self, package: super::data::Package) {
-        // TODO: add package to database
-        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
-
-        let _ = db.insert(&package.name, package.dep_string().as_str());
-        let _ = db.flush();
+        self.add_raw(&package.name, &package.dep_string());
     }
 
     pub fn add_raw(&self, name: &String, deps: &String) {
@@ -54,7 +50,7 @@ impl DB {
             self.empty_db();
         }
 
-        for line in io::get_lines(path.as_str()) {
+        for line in super::io::get_lines(path.as_str()) {
             let items: Vec<&str> = line.split_terminator(",").collect();
             if items.len() != 2 {
                 eprintln!("Error: invalid line in csv, ignoring...");
@@ -77,5 +73,31 @@ impl DB {
         let _ = db.clear();
 
         let _ = db.flush();
+    }
+
+    fn get_size(&self) -> usize {
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
+
+        return db.len()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_empty_db() {
+        let db = super::DB {
+            path: String::from("tests/files/test_empty_db.db"),
+        };
+
+        db.empty_db();
+
+        db.add_raw(&String::from("rvpkg"), &String::from("rustc;"));
+
+        assert_eq!(1, db.get_size());
+
+        db.empty_db();
+
+        assert_eq!(0, db.get_size());
     }
 }
