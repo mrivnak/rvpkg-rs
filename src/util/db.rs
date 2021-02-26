@@ -1,12 +1,12 @@
 use crate::util::io;
 
 pub struct DB {
-    path: String,
+    pub path: String,
 }
 
 impl DB {
 
-    fn get_package(&self, package: &String) -> Result<super::data::Package, String> {
+    pub fn get_package(&self, package: &String) -> Result<super::data::Package, String> {
         // TODO: returns a package struct for the specified package
         if !self.has_package(package) {
             return Err(String::from("Package not in database"));
@@ -22,7 +22,7 @@ impl DB {
         });
     }
 
-    fn has_package(&self, package: &String) -> bool {
+    pub fn has_package(&self, package: &String) -> bool {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
         let has = db.contains_key(package).unwrap();
@@ -32,7 +32,7 @@ impl DB {
         return has;
     }
 
-    fn new_package(&self, package: super::data::Package) {
+    pub fn new_package(&self, package: super::data::Package) {
         // TODO: add package to database
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
@@ -40,14 +40,14 @@ impl DB {
         let _ = db.flush();
     }
 
-    fn add_raw(&self, name: &String, deps: &String) {
+    pub fn add_raw(&self, name: &String, deps: &String) {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
         let _ = db.insert(name.as_str(), deps.as_str());
         let _ = db.flush();
     }
 
-    fn import_csv(&self, path: &String, mode: bool) {
+    pub fn import_csv(&self, path: &String, mode: bool) {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
         if mode {

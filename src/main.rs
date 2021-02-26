@@ -228,7 +228,11 @@ fn import(settings: &Settings, path: &String) {
     // false: merge
     // true: replace
 
-    util::db::import_csv(path, false);
+    let db = util::db::DB {
+        path: String::from("fs/usr/share/rvpkg/packages.db")
+    };
+
+    db.import_csv(path, false);
 }
 
 // Miscellaneous Functions
