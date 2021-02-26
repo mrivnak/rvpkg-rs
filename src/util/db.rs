@@ -1,66 +1,81 @@
 use crate::util::io;
 
-pub fn get_package(package: &String) -> Result<super::data::Package, String> {
-    // TODO: returns a package struct for the specified package
-    if !has_package(package) {
-        return Err(String::from("Package not in database"));
+pub struct DB {
+    path: String,
+}
+
+impl DB {
+
+    fn get_package(&self, package: &String) -> Result<super::data::Package, String> {
+        // TODO: returns a package struct for the specified package
+        if !self.has_package(package) {
+            return Err(String::from("Package not in database"));
+        }
+
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
+
+        // TODO: get data from sled db and insert into struct
+        return Ok(super::data::Package {
+            name: String::from(""),
+            installed: false,
+            dependencies: Vec::new()
+        });
     }
 
-    let db: sled::Db = sled::open("fs/usr/share/rvpkg/packages.db").unwrap();
+    fn has_package(&self, package: &String) -> bool {
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-    // TODO: get data from sled db and insert into struct
-    return Ok(super::data::Package {
-        name: String::from(""),
-        installed: false,
-        dependencies: Vec::new()
-    });
-}
+        let has = db.contains_key(package).unwrap();
 
-pub fn has_package(package: &String) -> bool {
-    let db: sled::Db = sled::open("fs/usr/share/rvpkg/packages.db").unwrap();
+        let _ = db.flush();
 
-    let has = db.contains_key(package).unwrap();
+        return has;
+    }
 
-    let _ = db.flush();
+    fn new_package(&self, package: super::data::Package) {
+        // TODO: add package to database
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-    return has;
-}
+        let _ = db.insert(&package.name, package.dep_string().as_str());
+        let _ = db.flush();
+    }
 
-pub fn new_package(package: super::data::Package) {
-    // TODO: add package to database
-    let db: sled::Db = sled::open("fs/usr/share/rvpkg/packages.db").unwrap();
+    fn add_raw(&self, name: &String, deps: &String) {
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-    let _ = db.insert(&package.name, package.dep_string().as_str());
-    let _ = db.flush();
-}
+        let _ = db.insert(name.as_str(), deps.as_str());
+        let _ = db.flush();
+    }
 
-pub fn add_raw(name: &String, deps: &String) {
-    let db: sled::Db = sled::open("fs/usr/share/rvpkg/packages.db").unwrap();
+    fn import_csv(&self, path: &String, mode: bool) {
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-    let _ = db.insert(name.as_str(), deps.as_str());
-    let _ = db.flush();
-}
+        if mode {
+            self.empty_db();
+        }
 
-pub fn import_csv(path: &String, mode: bool) {
-    let db: sled::Db = sled::open("fs/usr/share/rvpkg/packages.db").unwrap();
+        for line in io::get_lines(path.as_str()) {
+            let items: Vec<&str> = line.split_terminator(",").collect();
+            if items.len() != 2 {
+                eprintln!("Error: invalid line in csv, ignoring...");
+                eprintln!("Error: line: {}", line);
+            }
+            else {
+                let package = items[0];
+                let deps = items[1];
 
-    if mode {
+                let _ = db.insert(package, deps);
+            }
+        }
+
+        let _ = db.flush();
+    }
+
+    fn empty_db(&self) {
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
+
         let _ = db.clear();
+
+        let _ = db.flush();
     }
-
-    for line in io::get_lines(path.as_str()) {
-        let items: Vec<&str> = line.split_terminator(",").collect();
-        if items.len() != 2 {
-            eprintln!("Error: invalid line in csv, ignoring...");
-            eprintln!("Error: line: {}", line);
-        }
-        else {
-            let package = items[0];
-            let deps = items[1];
-
-            let _ = db.insert(package, deps);
-        }
-    }
-
-    let _ = db.flush();
 }
