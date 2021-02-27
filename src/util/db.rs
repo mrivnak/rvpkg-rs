@@ -3,21 +3,28 @@ pub struct DB {
 }
 
 impl DB {
-
     pub fn get_package(&self, package: &String) -> Result<super::data::Package, String> {
-        // TODO: returns a package struct for the specified package
+        let raw = self.get_raw(package);
+
+        // TODO: get data from sled db and insert into struct
+        match raw {
+            Ok(deps) => {
+                return Ok(super::data::Package {
+                    name: package.clone(),
+                    installed: false,
+                    dependencies: deps.split(";").map(|s| s.to_string()).collect(),
+                });
+            },
+            Err(e) => return Err(e),
+        }
+    }
+
+    fn get_raw(&self, package: &String) -> Result<String, String> {
         if !self.has_package(package) {
             return Err(String::from("Package not in database"));
         }
-
-        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
-
-        // TODO: get data from sled db and insert into struct
-        return Ok(super::data::Package {
-            name: String::from(""),
-            installed: false,
-            dependencies: Vec::new()
-        });
+        
+        return Ok()
     }
 
     pub fn has_package(&self, package: &String) -> bool {
@@ -34,7 +41,7 @@ impl DB {
         self.add_raw(&package.name, &package.dep_string());
     }
 
-    pub fn add_raw(&self, name: &String, deps: &String) {
+    fn add_raw(&self, name: &String, deps: &String) {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
         let _ = db.insert(name.as_str(), deps.as_str());
@@ -101,5 +108,10 @@ mod tests {
         db.empty_db();
 
         assert_eq!(0, db.get_size());
+    }
+
+    #[test]
+    fn test_add_get() {
+        
     }
 }
