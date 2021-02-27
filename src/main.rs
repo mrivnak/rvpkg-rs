@@ -229,7 +229,7 @@ fn import(settings: &Settings, path: &String) {
     // true: replace
 
     let db = util::db::DB {
-        path: String::from("fs/usr/share/rvpkg/packages.db")
+        path: util::paths::get_db_path(),
     };
 
     db.import_csv(path, false);

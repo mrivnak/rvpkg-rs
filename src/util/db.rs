@@ -1,5 +1,3 @@
-// use crate::util::io;
-
 pub struct DB {
     pub path: String,
 }
@@ -50,7 +48,11 @@ impl DB {
             self.empty_db();
         }
 
-        for line in super::io::get_lines(path.as_str()) {
+        let log = super::io::Log {
+            path: super::paths::get_log_path(),
+        };
+
+        for line in log.get_lines(path.as_str()) {
             let items: Vec<&str> = line.split_terminator(",").collect();
             if items.len() != 2 {
                 eprintln!("Error: invalid line in csv, ignoring...");
@@ -85,9 +87,9 @@ impl DB {
 #[cfg(test)]
 mod tests {
     #[test]
-    fn test_empty_db() {
+    fn test_add_empty_db() {
         let db = super::DB {
-            path: String::from("tests/files/test_empty_db.db"),
+            path: String::from("tests/files/test_add_empty_db.db"),
         };
 
         db.empty_db();

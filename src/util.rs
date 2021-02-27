@@ -3,3 +3,4 @@ pub mod data;
 pub mod db;
 pub mod io;
 pub mod pkg;
+pub mod paths;
