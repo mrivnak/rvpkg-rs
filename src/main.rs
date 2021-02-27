@@ -106,7 +106,7 @@ fn main() {
             .arg(Arg::with_name("LINES")
                 .help("Number of lines to display")
                 .default_value("5")  // Will convert to int later
-                .validator(is_pos_int)
+                .validator(util::is_pos_int)
             )
         )
         .subcommand(SubCommand::with_name("import")
@@ -114,7 +114,7 @@ fn main() {
             .arg(Arg::with_name("PATH")
                 .help("Path to CSV file")
                 .required(true)
-                .validator(file_exists)
+                .validator(util::file_exists)
             )
         );
 
@@ -233,16 +233,4 @@ fn import(settings: &Settings, path: &String) {
     };
 
     db.import_csv(path, false);
-}
-
-// Miscellaneous Functions
-
-fn is_pos_int(s: String) -> Result<(), String> {
-    let test = s.parse::<u64>().is_ok();
-
-    return if test { return Ok(()); } else { Err(String::from("Value must be a positive integer")) };
-}
-
-fn file_exists(s: String) -> Result<(), String> {
-    return if std::path::Path::new(s.as_str()).exists() { return Ok(()); } else { Err(String::from("Error: file not found!")) };
 }
