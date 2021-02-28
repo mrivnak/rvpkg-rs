@@ -14,7 +14,7 @@ impl Package {
             s.push_str("; ");
         }
 
-        s.trim_end();
+        s = s.trim_end().to_string();
 
         return s;
     }

@@ -19,7 +19,7 @@ pub fn parse_packages(in_pkgs: &[String]) -> Vec<super::data::Package> {
     let mut out_pkgs: Vec<super::data::Package> = Vec::new();
 
     let db = db::DB {
-        path: String::from("fs/usr/share/rvpkg/packages.db")
+        path: super::paths::get_db_path(),
     };
 
     for pkg in in_pkgs {

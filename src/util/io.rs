@@ -34,5 +34,7 @@ mod tests {
         assert_eq!(3, lines.len());
 
         assert_eq!(String::from("line one"), lines[0]);
+        assert_eq!(String::from("line two"), lines[1]);
+        assert_eq!(String::from("line three"), lines[2]);
     }
 }

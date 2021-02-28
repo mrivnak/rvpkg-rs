@@ -220,17 +220,32 @@ fn tail(settings: &Settings, lines: u64) {
 }
 
 fn import(settings: &Settings, path: &String) {
-    // TODO: implement import
+    print!("Merge or replace database? (m/r): ");
+    use std::io::Write;
+    std::io::stdout().flush().unwrap();
 
-    // TODO: ask if user would like to merge or replace
-    // abort if user hits enter with no option specified
-    // Modes:
-    // false: merge
-    // true: replace
+    let line: String = text_io::read!("{}\n");
+    let line = line.to_ascii_lowercase();
+
+    let mut mode = false;
+    match line.as_str() {
+        "m" => {
+            mode = false;
+        }
+        "r" => {
+            mode = true;
+        }
+        _ => {
+            eprintln!("Unrecognized input, exiting...");
+            std::process::exit(1);
+        }
+
+    }
+
 
     let db = util::db::DB {
         path: util::paths::get_db_path(),
     };
 
-    db.import_csv(path, false);
+    db.import_csv(path, mode);
 }

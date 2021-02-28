@@ -12,3 +12,7 @@ Cargo.lock
 
 tests/files/*
 !tests/files/README.md
+!tests/files/test_get_lines.txt
+!tests/files/test_import.csv
+
+fs/usr/share/rvpkg/packages.db/

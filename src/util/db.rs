@@ -63,9 +63,14 @@ impl DB {
 
         for line in super::io::get_lines(path.as_str()).unwrap() {
             let items: Vec<&str> = line.split_terminator(",").collect();
-            if items.len() != 2 {
+            if items.len() > 2 {
                 eprintln!("Error: invalid line in csv, ignoring...");
                 eprintln!("Error: line: {}", line);
+            }
+            if items.len() == 1 {
+                let package = items[0];
+
+                let _ = db.insert(package, bincode::serialize("").unwrap());
             }
             else {
                 let package = items[0];
@@ -153,7 +158,12 @@ mod tests {
 
         let val_out = db.get_package(&String::from("rvpkg")).unwrap();
 
-        // assert_eq!(String::from("rvpkg"), val_out.name);
-        // assert_eq!(String::from("rustc"), val_out.dependencies[0]);
+        assert_eq!(String::from("rvpkg"), val_out.name);
+        assert_eq!(String::from("rustc"), val_out.dependencies[0]);
+
+        let val_out = db.get_package(&String::from("clang")).unwrap();
+
+        assert_eq!(String::from("clang"), val_out.name);
+        assert_eq!(String::from("llvm"), val_out.dependencies[0]);
     }
 }
