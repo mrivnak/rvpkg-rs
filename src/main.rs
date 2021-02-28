@@ -161,16 +161,16 @@ fn main() {
             new(&settings);
         },
         ("delete", Some(sub_matches)) => {
-            let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();
-            delete(&settings, packages.as_slice());
+            let package: String = String::from(sub_matches.value_of("PACKAGE").unwrap());
+            delete(&settings, &package);
         },
         ("search", Some(sub_matches)) => {
-            let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();
-            search(&settings, packages.as_slice());
+            let package: String = String::from(sub_matches.value_of("SEARCH").unwrap());
+            search(&settings, &package);
         },
         ("tail", Some(sub_matches)) => {
             let lines = sub_matches.value_of("LINES").unwrap().parse::<u64>().unwrap();
-            tail(&settings, lines);
+            tail(&settings, &lines);
         },
         ("import", Some(sub_matches)) => {
             let path = String::from(sub_matches.value_of("PATH").unwrap());
@@ -207,15 +207,23 @@ fn new(settings: &Settings) {
     // TODO: implement new
 }
 
-fn delete(settings: &Settings, package: &[String]) {
+fn delete(settings: &Settings, package: &String) {
     // TODO: implement delete
 }
 
-fn search(settings: &Settings, package: &[String]) {
+fn search(settings: &Settings, package: &String) {
     // TODO: implement search
+    let db = util::db::DB {
+        path: util::paths::get_db_path(),
+    };
+
+    let results = db.find_key(package);
+        for result in results {
+        println!("{}", result);
+    }    
 }
 
-fn tail(settings: &Settings, lines: u64) {
+fn tail(settings: &Settings, lines: &u64) {
     // TODO: implement tail
 }
 

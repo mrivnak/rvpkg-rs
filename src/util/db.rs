@@ -23,7 +23,7 @@ impl DB {
 
     fn get_raw(&self, package: &String) -> Result<String, String> {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
-        let value = db.get(package);
+        let value = db.get(bincode::serialize(package).unwrap());
 
         match value {
             Ok(v) => {
@@ -31,6 +31,20 @@ impl DB {
             },
             Err(e) => return Err(e.to_string()),
         }
+    }
+
+    pub fn find_key(&self, search: &String) -> Vec<String> {
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
+
+        let mut out: Vec<String> = Vec::new();
+        for key in db.iter() {
+            let key: String = bincode::deserialize(&key.unwrap().0).unwrap();
+            if key.contains(search) {
+                out.push(key);
+            }
+        }
+
+        return out;
     }
 
     pub fn has_package(&self, package: &String) -> bool {
@@ -50,7 +64,7 @@ impl DB {
     fn add_raw(&self, name: &String, deps: &String) {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-        let _ = db.insert(name.as_str(), bincode::serialize(deps).unwrap());
+        let _ = db.insert(bincode::serialize(name).unwrap(), bincode::serialize(deps).unwrap());
         let _ = db.flush();
     }
 
@@ -70,13 +84,13 @@ impl DB {
             if items.len() == 1 {
                 let package = items[0];
 
-                let _ = db.insert(package, bincode::serialize("").unwrap());
+                let _ = db.insert(bincode::serialize(package).unwrap(), bincode::serialize("").unwrap());
             }
             else {
                 let package = items[0];
                 let deps = items[1];
 
-                let _ = db.insert(package, bincode::serialize(deps).unwrap());
+                let _ = db.insert(bincode::serialize(package).unwrap(), bincode::serialize(deps).unwrap());
             }
         }
 

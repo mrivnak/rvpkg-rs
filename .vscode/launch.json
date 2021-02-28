@@ -87,6 +87,7 @@
             "preLaunchTask": "Rust: cargo build - rvpkg-rs",
             "program": "${workspaceFolder}/target/debug/rvpkg",
             "args": [
+                "search",
                 "python"
             ],
             "cwd": "${workspaceFolder}"
