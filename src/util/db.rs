@@ -14,7 +14,7 @@ impl DB {
                 return Ok(super::data::Package {
                     name: package.clone(),
                     installed: false,
-                    dependencies: deps.split(";").map(|s| s.to_string()).collect(),
+                    dependencies: deps.split_terminator(";").map(|s| s.to_string()).collect(),
                 });
             },
             Err(e) => return Err(e),
@@ -55,17 +55,13 @@ impl DB {
     }
 
     pub fn import_csv(&self, path: &String, mode: bool) {
-        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
-
         if mode {
             self.empty_db();
         }
 
-        let log = super::io::Log {
-            path: super::paths::get_log_path(),
-        };
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-        for line in super::io::get_lines(path.as_str()) {
+        for line in super::io::get_lines(path.as_str()).unwrap() {
             let items: Vec<&str> = line.split_terminator(",").collect();
             if items.len() != 2 {
                 eprintln!("Error: invalid line in csv, ignoring...");
@@ -75,7 +71,7 @@ impl DB {
                 let package = items[0];
                 let deps = items[1];
 
-                let _ = db.insert(package, deps);
+                let _ = db.insert(package, bincode::serialize(deps).unwrap());
             }
         }
 
@@ -145,5 +141,19 @@ mod tests {
 
         assert_eq!(String::from("rvpkg"), val_out.name);
         assert_eq!(String::from("rustc"), val_out.dependencies[0]);
+    }
+
+    #[test]
+    fn test_import_csv() {
+        let db = super::DB {
+            path: String::from("tests/files/test_import_csv.db"),
+        };
+
+        db.import_csv(&String::from("tests/files/test_import.csv"), true);
+
+        let val_out = db.get_package(&String::from("rvpkg")).unwrap();
+
+        // assert_eq!(String::from("rvpkg"), val_out.name);
+        // assert_eq!(String::from("rustc"), val_out.dependencies[0]);
     }
 }

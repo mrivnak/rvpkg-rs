@@ -4,19 +4,35 @@ pub struct Log {
 
 impl Log {
     pub fn get_log(&self) -> Vec<String> {
-        return get_lines(self.path.as_str());
+        return get_lines(self.path.as_str()).unwrap();
     }
 }
 
-pub fn get_lines(path: &str) -> Vec<String> {
-    let contents = std::fs::read_to_string(path).expect("Unable to read package log");
+pub fn get_lines(path: &str) -> Result<Vec<String>, String> {
+    let contents = std::fs::read_to_string(path);
 
-    if contents == "Unable to read package db" {
-        eprintln!("Error: Unable to read package log");
-        std::process::exit(1);
+    match contents {
+        Ok(c) => {
+            let data: Vec<String> = c.lines().map(String::from).collect();
+            return Ok(data)
+        }
+        Err(e) => {
+            Err(String::from("Unable to read file"))
+        }
     }
 
-    let data: Vec<String> = contents.lines().map(String::from).collect();
+    
 
-    return data;
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_get_lines() {
+        let lines: Vec<String> = super::get_lines("tests/files/test_get_lines.txt").unwrap();
+
+        assert_eq!(3, lines.len());
+
+        assert_eq!(String::from("line one"), lines[0]);
+    }
 }
