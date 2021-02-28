@@ -8,7 +8,7 @@ impl Log {
     }
 }
 
-fn get_lines(path: &str) -> Vec<String> {
+pub fn get_lines(path: &str) -> Vec<String> {
     let contents = std::fs::read_to_string(path).expect("Unable to read package log");
 
     if contents == "Unable to read package db" {

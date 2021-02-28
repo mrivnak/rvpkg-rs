@@ -1,3 +1,5 @@
+use bincode;
+
 pub struct DB {
     pub path: String,
 }
@@ -20,11 +22,15 @@ impl DB {
     }
 
     fn get_raw(&self, package: &String) -> Result<String, String> {
-        if !self.has_package(package) {
-            return Err(String::from("Package not in database"));
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
+        let value = db.get(package);
+
+        match value {
+            Ok(v) => {
+                return Ok(bincode::deserialize(&v.unwrap()).unwrap());
+            },
+            Err(e) => return Err(e.to_string()),
         }
-        
-        return Ok()
     }
 
     pub fn has_package(&self, package: &String) -> bool {
@@ -44,7 +50,7 @@ impl DB {
     fn add_raw(&self, name: &String, deps: &String) {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-        let _ = db.insert(name.as_str(), deps.as_str());
+        let _ = db.insert(name.as_str(), bincode::serialize(deps).unwrap());
         let _ = db.flush();
     }
 
@@ -59,7 +65,7 @@ impl DB {
             path: super::paths::get_log_path(),
         };
 
-        for line in log.get_lines(path.as_str()) {
+        for line in super::io::get_lines(path.as_str()) {
             let items: Vec<&str> = line.split_terminator(",").collect();
             if items.len() != 2 {
                 eprintln!("Error: invalid line in csv, ignoring...");
@@ -112,6 +118,32 @@ mod tests {
 
     #[test]
     fn test_add_get() {
-        
+        let db = super::DB {
+            path: String::from("tests/files/test_add_get.db"),
+        };
+
+        let val_in = String::from("test");
+
+        db.add_raw(&String::from("key"), &val_in);
+
+        let val_out = db.get_raw(&String::from("key")).unwrap();
+
+        assert_eq!(val_in, val_out);        
+    }
+
+    #[test]
+    fn test_add_get_pkg() {
+        let db = super::DB {
+            path: String::from("tests/files/test_add_get_pkg.db"),
+        };
+
+        let val_in = String::from("rustc;");
+
+        db.add_raw(&String::from("rvpkg"), &val_in);
+
+        let val_out = db.get_package(&String::from("rvpkg")).unwrap();
+
+        assert_eq!(String::from("rvpkg"), val_out.name);
+        assert_eq!(String::from("rustc"), val_out.dependencies[0]);
     }
 }

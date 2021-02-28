@@ -5,19 +5,6 @@ pub struct Package {
     pub dependencies: Vec<String>
 }
 
-impl From::<Package> for String {
-    fn from(package: Package) -> String {
-        return package.name;
-    }
-}
-
-impl From::<&Package> for String {
-    fn from(package: &Package) -> String {
-        let meta_package = package.clone();
-        return meta_package.name;
-    }
-}
-
 impl Package {
     pub fn dep_string(&self) -> String {
         let mut s: String = String::from("");
@@ -30,5 +17,18 @@ impl Package {
         s.trim_end();
 
         return s;
+    }
+}
+
+impl From::<Package> for String {
+    fn from(package: Package) -> String {
+        return package.name;
+    }
+}
+
+impl From::<&Package> for String {
+    fn from(package: &Package) -> String {
+        let meta_package = package.clone();
+        return meta_package.name;
     }
 }
