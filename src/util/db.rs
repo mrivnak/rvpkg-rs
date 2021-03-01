@@ -57,10 +57,6 @@ impl DB {
         return has;
     }
 
-    pub fn new_package(&self, package: super::data::Package) {
-        self.add_raw(&package.name, &package.dep_string());
-    }
-
     fn add_raw(&self, name: &String, deps: &String) {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 

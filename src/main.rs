@@ -89,18 +89,6 @@ fn main() {
                 .required(true)
             )
         )
-        .subcommand(SubCommand::with_name("built-with")
-            .about("Checks if one package is build with another")
-            .arg(Arg::with_name("PACKAGE")
-                .help("Package to check")
-                .required(true)
-            )
-            .arg(Arg::with_name("DEPENDENCIES")
-                .help("Dependencies to check against")
-                .required(true)
-                .min_values(1)
-            )
-        )
         .subcommand(SubCommand::with_name("tail")
             .about("Displays the last N lines of the log file")
             .arg(Arg::with_name("LINES")
@@ -135,16 +123,6 @@ fn main() {
 
             add(&settings, packages.as_slice());
         },
-        ("built-with", Some(sub_matches)) => {
-            let package = sub_matches.value_of("PACKAGE").unwrap();
-            let package = util::pkg::parse_packages(vec![String::from(package)].as_slice());
-            let package = package.first().unwrap().clone();
-
-            let dependencies: Vec<String> = sub_matches.values_of("DEPENDENCIES").unwrap().map(|x| String::from(x)).collect();
-            let dependencies = util::pkg::parse_packages(dependencies.as_slice());
-
-            built_with(&settings, package, dependencies.as_slice());
-        },
         ("check", Some(sub_matches)) => {
             let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();
             let packages = util::pkg::parse_packages(packages.as_slice());
@@ -160,17 +138,9 @@ fn main() {
         ("new", _) => {
             new(&settings);
         },
-        ("delete", Some(sub_matches)) => {
-            let package: String = String::from(sub_matches.value_of("PACKAGE").unwrap());
-            delete(&settings, &package);
-        },
         ("search", Some(sub_matches)) => {
             let package: String = String::from(sub_matches.value_of("SEARCH").unwrap());
             search(&settings, &package);
-        },
-        ("tail", Some(sub_matches)) => {
-            let lines = sub_matches.value_of("LINES").unwrap().parse::<u64>().unwrap();
-            tail(&settings, &lines);
         },
         ("import", Some(sub_matches)) => {
             let path = String::from(sub_matches.value_of("PATH").unwrap());
@@ -185,10 +155,6 @@ fn main() {
 
 fn add(settings: &Settings, packages: &[util::data::Package]) {
     // TODO: implement add
-}
-
-fn built_with(settings: &Settings, pkg: util::data::Package, deps: &[util::data::Package]) {
-    // TODO: implement built with
 }
 
 fn check(settings: &Settings, packages: &[util::data::Package]) {
@@ -207,10 +173,6 @@ fn new(settings: &Settings) {
     // TODO: implement new
 }
 
-fn delete(settings: &Settings, package: &String) {
-    // TODO: implement delete
-}
-
 fn search(settings: &Settings, package: &String) {
     // TODO: implement search
     let db = util::db::DB {
@@ -223,10 +185,6 @@ fn search(settings: &Settings, package: &String) {
     }    
 }
 
-fn tail(settings: &Settings, lines: &u64) {
-    // TODO: implement tail
-}
-
 fn import(settings: &Settings, path: &String) {
     print!("Merge or replace database? (m/r): ");
     use std::io::Write;
@@ -235,7 +193,7 @@ fn import(settings: &Settings, path: &String) {
     let line: String = text_io::read!("{}\n");
     let line = line.to_ascii_lowercase();
 
-    let mut mode = false;
+    let mode: bool;
     match line.as_str() {
         "m" => {
             mode = false;

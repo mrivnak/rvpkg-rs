@@ -25,19 +25,6 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug | built-with",
-            "preLaunchTask": "Rust: cargo build - rvpkg-rs",
-            "program": "${workspaceFolder}/target/debug/rvpkg",
-            "args": [
-                "built-with",
-                "gcc",
-                "systemd"
-            ],
-            "cwd": "${workspaceFolder}"
-        },
-        {
-            "type": "lldb",
-            "request": "launch",
             "name": "Debug | check",
             "preLaunchTask": "Rust: cargo build - rvpkg-rs",
             "program": "${workspaceFolder}/target/debug/rvpkg",

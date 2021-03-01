@@ -1,4 +1,8 @@
-use crate::util::db;
+use std::collections::HashMap;
+
+use super::db;
+use super::log;
+use super::data::Package;
 
 pub fn get_stripped_log(log: &[String]) -> Vec<String> {
     let mut out = Vec::new();
@@ -15,14 +19,14 @@ pub fn get_stripped_log(log: &[String]) -> Vec<String> {
     return out;
 }
 
-pub fn parse_packages(in_pkgs: &[String]) -> Vec<super::data::Package> {
-    let mut out_pkgs: Vec<super::data::Package> = Vec::new();
+pub fn parse_packages(packages: &[String]) -> Vec<Package> {
+    let mut out_pkgs: Vec<Package> = Vec::new();
 
     let db = db::DB {
         path: super::paths::get_db_path(),
     };
 
-    for pkg in in_pkgs {
+    for pkg in packages {
         let meta_pkg = pkg.clone();
 
         if db.has_package(&meta_pkg) {
@@ -35,4 +39,20 @@ pub fn parse_packages(in_pkgs: &[String]) -> Vec<super::data::Package> {
     }
 
     return out_pkgs;
+}
+
+pub fn is_installed(package: &String) -> bool {
+    let log = log::Log {
+        path: super::paths::get_log_path(),
+    };
+
+    return log.is_installed(package);
+}
+
+pub fn install(package: &String) {
+    let log = log::Log {
+        path: super::paths::get_log_path(),
+    };
+
+    log.install_package(package);
 }

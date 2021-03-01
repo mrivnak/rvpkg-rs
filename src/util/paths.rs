@@ -3,5 +3,5 @@ pub fn get_db_path() -> String {
 }
 
 pub fn get_log_path() -> String {
-    return String::from("fs/var/lib/rvpkg/packages.log");
+    return String::from("fs/var/lib/rvpkg/package_log.db");
 }
