@@ -1,7 +1,4 @@
-[config]
 verbose = false
-default_yes = true
 no_confirm = false
-runtime = false
 show_deps = false
 color = true

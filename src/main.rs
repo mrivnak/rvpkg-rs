@@ -4,7 +4,7 @@ use clap::{Arg, App, AppSettings, SubCommand};
 
 mod util;
 
-use util::data::Settings;
+use util::data::{Package, Settings};
 
 fn main() {
     // Get information from Cargo.toml
@@ -13,7 +13,9 @@ fn main() {
     const AUTHORS: &'static str = env!("CARGO_PKG_AUTHORS");
     const DESCRIPTION: &'static str = env!("CARGO_PKG_DESCRIPTION"); 
 
-    // Get settings from rvpkg.toml
+    let config = std::fs::read_to_string(util::paths::get_config_path()).unwrap();
+    let settings: Settings = toml::from_str(config.as_str()).unwrap();
+
 
     // Argument parsing
     let app = App::new(NAME)
@@ -30,11 +32,6 @@ fn main() {
             .short("y")
             .long("no-confirm")
             .help("Accept package updates without prompting the user")
-            .global(true))
-        .arg(Arg::with_name("runtime")
-            .short("r")
-            .long("runtime")
-            .help("Display runtime dependencies")
             .global(true))
         .arg(Arg::with_name("show-deps")
             .short("d")
@@ -77,6 +74,18 @@ fn main() {
         )
         .subcommand(SubCommand::with_name("import")
             .about("Imports a package database from a csv file")
+            .arg(Arg::with_name("replace")
+                .short("r")
+                .long("replace")
+                .help("Replace database contents")
+                .conflicts_with("merge")
+            )
+            .arg(Arg::with_name("merge")
+                .short("m")
+                .long("merge")
+                .help("Merge database contents")
+                .conflicts_with("replace")
+            )
             .arg(Arg::with_name("PATH")
                 .help("Path to CSV file")
                 .required(true)
@@ -87,11 +96,10 @@ fn main() {
     let matches = app.get_matches();
 
     let settings = Settings {
-        verbose: matches.is_present("verbose"),
-        no_confirm: matches.is_present("no_confirm"),
-        runtime: matches.is_present("runtime"),
-        show_deps: matches.is_present("show-deps"),
-        color: matches.is_present("color")
+        verbose: matches.is_present("verbose") || settings.verbose,
+        no_confirm: matches.is_present("no_confirm") || settings.no_confirm,
+        show_deps: matches.is_present("show-deps") || settings.show_deps,
+        color: matches.is_present("color") || settings.color
     };
 
     match matches.subcommand() {
@@ -119,8 +127,13 @@ fn main() {
         },
         ("import", Some(sub_matches)) => {
             let path = String::from(sub_matches.value_of("PATH").unwrap());
+            let merge = sub_matches.is_present("merge");
+            let replace = sub_matches.is_present("replace");
+            let mut mode = 0;
+            if merge { mode = 1 };
+            if replace { mode = 2 };
 
-            import(&settings, &path);
+            import(&settings, &path, mode);
         }
         _ => {}
     }
@@ -128,31 +141,35 @@ fn main() {
 
 // ###### Subcommand Functions ######
 
-fn add(settings: &Settings, packages: &[util::data::Package]) {
+fn add(settings: &Settings, packages: &[Package]) {
     util::io::print_pkg_table(&packages, &settings);
 
     print!("Confirm changes? (Y/n): ");
-    use std::io::Write;
-    std::io::stdout().flush().unwrap();
+    if !settings.no_confirm {
+        use std::io::Write;
+        std::io::stdout().flush().unwrap();
 
-    let line: String = text_io::read!("{}\n");
-    let line = line.to_ascii_lowercase();
+        let line: String = text_io::read!("{}\n");
+        let line = line.to_ascii_lowercase();
 
-    if line.as_str() == "y" || line.as_str() == "" {
-        let package_names: Vec<String> = packages.iter().map(|x| x.clone().name).collect();
-        util::pkg::install(package_names.as_slice());
+        if line.as_str() == "y" || line.as_str() == "" {
+            // continue
+        }
+        else if line.as_str() == "n" {
+            eprintln!("Exiting...");
+            std::process::exit(1);
+        }
+        else {
+            eprintln!("Unrecognized input, exiting...");
+            std::process::exit(1);
+        }
     }
-    else if line.as_str() == "n" {
-        eprintln!("Exiting...");
-        std::process::exit(1);
-    }
-    else {
-        eprintln!("Unrecognized input, exiting...");
-        std::process::exit(1);
-    }
+
+    let package_names: Vec<String> = packages.iter().map(|x| x.clone().name).collect();
+    util::pkg::install(package_names.as_slice());
 }
 
-fn check(settings: &Settings, packages: &[util::data::Package]) {
+fn check(settings: &Settings, packages: &[Package]) {
     util::io::print_pkg_table(&packages, &settings);
 }
 
@@ -161,7 +178,7 @@ fn count(settings: &Settings) {
         path: util::paths::get_log_path(),
     };
 
-    println!("{}{}", log.get_size(), if settings.verbose { " packages installed" } else { "" })
+    println!("{}{}", log.get_size(), if settings.verbose { " package(s) installed" } else { "" })
 }
 
 fn list(settings: &Settings) {
@@ -185,27 +202,42 @@ fn search(settings: &Settings, package: &String) {
     }    
 }
 
-fn import(settings: &Settings, path: &String) {
-    print!("Merge or replace database? (m/r): ");
-    use std::io::Write;
-    std::io::stdout().flush().unwrap();
-
-    let line: String = text_io::read!("{}\n");
-    let line = line.to_ascii_lowercase();
-
+fn import(settings: &Settings, path: &String, umode: u8) {
     let mode: bool;
-    match line.as_str() {
-        "m" => {
-            mode = false;
+    if umode == 1 || umode == 2 {
+        match umode {
+            1 => {
+                mode = false;
+            }
+            2 => {
+                mode = true;
+            }
+            _ => {
+                unreachable!();
+            }
         }
-        "r" => {
-            mode = true;
-        }
-        _ => {
-            eprintln!("Unrecognized input, exiting...");
-            std::process::exit(1);
-        }
+    }
+    else {
+        print!("Merge or replace database? (m/r): ");
+        use std::io::Write;
+        std::io::stdout().flush().unwrap();
 
+        let line: String = text_io::read!("{}\n");
+        let line = line.to_ascii_lowercase();
+
+        match line.as_str() {
+            "m" => {
+                mode = false;
+            }
+            "r" => {
+                mode = true;
+            }
+            _ => {
+                eprintln!("Unrecognized input, exiting...");
+                std::process::exit(1);
+            }
+
+        }
     }
 
 

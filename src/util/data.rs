@@ -1,3 +1,5 @@
+use serde::Deserialize;
+
 #[derive(Clone, Debug)]  // Implement clone trait for package
 pub struct Package {
     pub name: String,
@@ -33,10 +35,10 @@ impl From::<&Package> for String {
     }
 }
 
+#[derive(Deserialize)]
 pub struct Settings {
     pub verbose:    bool,
     pub no_confirm: bool,
-    pub runtime:    bool,
     pub show_deps:  bool,
     pub color:      bool,
 }
