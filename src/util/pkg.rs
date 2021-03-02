@@ -2,21 +2,6 @@ use super::db;
 use super::log;
 use super::data::Package;
 
-pub fn get_stripped_log(log: &[String]) -> Vec<String> {
-    let mut out = Vec::new();
-
-    // TODO: reimplement by sorting and removing duplicates
-    // should be much faster that way
-    for package in log {
-        if !out.contains(package) {
-            out.push(package.to_string());
-        }
-    }
-
-    out.sort();
-    return out;
-}
-
 pub fn parse_packages(packages: &[String]) -> Vec<Package> {
     let mut out_pkgs: Vec<Package> = Vec::new();
 

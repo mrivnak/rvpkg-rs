@@ -1,3 +1,5 @@
+use std::path;
+
 use clap::{Arg, App, AppSettings, SubCommand};
 
 mod util;
@@ -66,29 +68,11 @@ fn main() {
         .subcommand(SubCommand::with_name("list")
             .about("Displays the list of installed packages")
         )
-        .subcommand(SubCommand::with_name("new")
-            .about("Interactively adds a new package to the database")
-        )
-        .subcommand(SubCommand::with_name("delete")
-            .about("Deletes a package from the database")
-            .arg(Arg::with_name("PACKAGE")
-                .help("Package to delete")
-                .required(true)
-            )
-        )
         .subcommand(SubCommand::with_name("search")
             .about("Searches for a package")
             .arg(Arg::with_name("SEARCH")
                 .help("Search term")
                 .required(true)
-            )
-        )
-        .subcommand(SubCommand::with_name("tail")
-            .about("Displays the last N lines of the log file")
-            .arg(Arg::with_name("LINES")
-                .help("Number of lines to display")
-                .default_value("5")  // Will convert to int later
-                .validator(util::is_pos_int)
             )
         )
         .subcommand(SubCommand::with_name("import")
@@ -129,9 +113,6 @@ fn main() {
         ("list", _) => {
             list(&settings);
         },
-        ("new", _) => {
-            new(&settings);
-        },
         ("search", Some(sub_matches)) => {
             let package: String = String::from(sub_matches.value_of("SEARCH").unwrap());
             search(&settings, &package);
@@ -148,7 +129,6 @@ fn main() {
 // ###### Subcommand Functions ######
 
 fn add(settings: &Settings, packages: &[util::data::Package]) {
-    // TODO: implement add
     util::io::print_pkg_table(&packages, &settings);
 
     print!("Confirm changes? (Y/n): ");
@@ -177,15 +157,21 @@ fn check(settings: &Settings, packages: &[util::data::Package]) {
 }
 
 fn count(settings: &Settings) {
-    // TODO: implement count
+    let log = util::log::Log {
+        path: util::paths::get_log_path(),
+    };
+
+    println!("{}{}", log.get_size(), if settings.verbose { " packages installed" } else { "" })
 }
 
 fn list(settings: &Settings) {
-    // TODO: implement list
-}
+    let log = util::log::Log {
+        path: util::paths::get_log_path(),
+    };
 
-fn new(settings: &Settings) {
-    // TODO: implement new
+    for line in log.get_installed() {
+        println!("{}", line);
+    }
 }
 
 fn search(settings: &Settings, package: &String) {

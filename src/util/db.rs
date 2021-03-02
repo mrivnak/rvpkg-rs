@@ -8,7 +8,6 @@ impl DB {
     pub fn get_package(&self, package: &String) -> Result<super::data::Package, String> {
         let raw = self.get_raw(package);
 
-        // TODO: get data from sled db and insert into struct
         match raw {
             Ok(deps) => {
                 return Ok(super::data::Package {
@@ -37,8 +36,8 @@ impl DB {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
         let mut out: Vec<String> = Vec::new();
-        for key in db.iter() {
-            let key: String = bincode::deserialize(&key.unwrap().0).unwrap();
+        for item in db.iter() {
+            let key: String = bincode::deserialize(&item.unwrap().0).unwrap();
             if key.contains(search) {
                 out.push(key);
             }

@@ -34,6 +34,41 @@ impl Log {
             return false;
         }
     }
+
+    pub fn get_keys(&self) -> Vec<String> {
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
+
+        let mut out = Vec::new();
+        for item in db.iter() {
+            let key: String = bincode::deserialize(&item.unwrap().0).unwrap();
+            out.push(key);
+        }
+
+        out.sort();
+        return out;
+    }
+
+    pub fn get_installed(&self) -> Vec<String> {
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
+
+        let mut out = Vec::new();
+        for item in db.iter() {
+            let kv_pair = item.unwrap();
+            let key: String = bincode::deserialize(&kv_pair.0).unwrap();
+            if bincode::deserialize(&kv_pair.1).unwrap() {
+                out.push(key);
+            }
+        }
+
+        out.sort();
+        return out;
+    }
+
+    pub fn get_size(&self) -> usize {
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
+
+        return db.len();
+    }
 }
 
 #[cfg(test)]
