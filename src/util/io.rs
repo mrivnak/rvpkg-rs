@@ -1,92 +1,106 @@
 pub fn print_pkg_table(packages: &[super::data::Package], settings: &super::data::Settings) {
-    use prettytable::{Attr, Cell, Row, Table, color, format};
+    use prettytable::{color, format, Attr, Cell, Row, Table};
 
     let mut table = Table::new();
     table.set_format(*format::consts::FORMAT_NO_BORDER_LINE_SEPARATOR);
 
     table.add_row(Row::new(vec![
-        Cell::new("Name")
-            .with_style(Attr::Bold),
-        Cell::new("Installed")
-            .with_style(Attr::Bold),
-        Cell::new("Mode")
-            .with_style(Attr::Bold)
+        Cell::new("Name").with_style(Attr::Bold),
+        Cell::new("Installed").with_style(Attr::Bold),
+        Cell::new("Mode").with_style(Attr::Bold),
     ]));
 
     for pkg in packages {
         if settings.color {
             table.add_row(Row::new(vec![
                 Cell::new(pkg.name.as_str()),
-                Cell::new(
-                    if super::pkg::is_installed(&pkg.name) { 
-                        if settings.verbose { "Yes" } else { "Y" }
+                Cell::new(if super::pkg::is_installed(&pkg.name) {
+                    if settings.verbose {
+                        "Yes"
+                    } else {
+                        "Y"
                     }
-                    else { 
-                        if settings.verbose { "No" } else { "N" }
-                    })
-                    .with_style(Attr::ForegroundColor(
-                        if super::pkg::is_installed(&pkg.name) {
-                            color::GREEN
-                        }
-                        else {
-                            color::RED
-                        }
-                    )
-                ),
-                Cell::new(if settings.verbose { "Explicit" } else { "E" })
+                } else {
+                    if settings.verbose {
+                        "No"
+                    } else {
+                        "N"
+                    }
+                })
+                .with_style(Attr::ForegroundColor(
+                    if super::pkg::is_installed(&pkg.name) {
+                        color::GREEN
+                    } else {
+                        color::RED
+                    },
+                )),
+                Cell::new(if settings.verbose { "Explicit" } else { "E" }),
             ]));
-        }        
-        else {
+        } else {
             table.add_row(Row::new(vec![
                 Cell::new(pkg.name.as_str()),
-                Cell::new(
-                    if super::pkg::is_installed(&pkg.name) { 
-                        if settings.verbose { "Yes" } else { "Y" }
+                Cell::new(if super::pkg::is_installed(&pkg.name) {
+                    if settings.verbose {
+                        "Yes"
+                    } else {
+                        "Y"
                     }
-                    else { 
-                        if settings.verbose { "No" } else { "N" }
-                    }),
-                Cell::new(if settings.verbose { "Explicit" } else { "E" })
+                } else {
+                    if settings.verbose {
+                        "No"
+                    } else {
+                        "N"
+                    }
+                }),
+                Cell::new(if settings.verbose { "Explicit" } else { "E" }),
             ]));
         }
-        
+
         if settings.show_deps {
             for dep in &pkg.dependencies {
                 if settings.color {
                     table.add_row(Row::new(vec![
-                        Cell::new(dep)
-                            .with_style(Attr::ForegroundColor(color::BRIGHT_BLACK)),
-                        Cell::new(
-                            if super::pkg::is_installed(&pkg.name) { 
-                                if settings.verbose { "Yes" } else { "Y" }
+                        Cell::new(dep).with_style(Attr::ForegroundColor(color::BRIGHT_BLACK)),
+                        Cell::new(if super::pkg::is_installed(&pkg.name) {
+                            if settings.verbose {
+                                "Yes"
+                            } else {
+                                "Y"
                             }
-                            else { 
-                                if settings.verbose { "No" } else { "N" }
-                            })
-                            .with_style(Attr::ForegroundColor(
-                                if super::pkg::is_installed(dep) {
-                                    color::GREEN
-                                }
-                                else {
-                                    color::RED
-                                }
-                            )
-                        ),
+                        } else {
+                            if settings.verbose {
+                                "No"
+                            } else {
+                                "N"
+                            }
+                        })
+                        .with_style(Attr::ForegroundColor(
+                            if super::pkg::is_installed(dep) {
+                                color::GREEN
+                            } else {
+                                color::RED
+                            },
+                        )),
                         Cell::new(if settings.verbose { "Dependency" } else { "D" })
-                            .with_style(Attr::ForegroundColor(color::BRIGHT_BLACK))
+                            .with_style(Attr::ForegroundColor(color::BRIGHT_BLACK)),
                     ]));
-                }
-                else {
+                } else {
                     table.add_row(Row::new(vec![
                         Cell::new(dep),
-                        Cell::new(
-                        if super::pkg::is_installed(&pkg.name) { 
-                            if settings.verbose { "Yes" } else { "Y" }
-                        }
-                        else { 
-                            if settings.verbose { "No" } else { "N" }
+                        Cell::new(if super::pkg::is_installed(&pkg.name) {
+                            if settings.verbose {
+                                "Yes"
+                            } else {
+                                "Y"
+                            }
+                        } else {
+                            if settings.verbose {
+                                "No"
+                            } else {
+                                "N"
+                            }
                         }),
-                        Cell::new(if settings.verbose { "Dependency" } else { "D" })
+                        Cell::new(if settings.verbose { "Dependency" } else { "D" }),
                     ]));
                 }
             }
@@ -102,15 +116,10 @@ pub fn get_lines(path: &str) -> Result<Vec<String>, String> {
     match contents {
         Ok(c) => {
             let data: Vec<String> = c.lines().map(String::from).collect();
-            return Ok(data)
+            return Ok(data);
         }
-        Err(e) => {
-            Err(String::from("Unable to read file"))
-        }
+        Err(e) => Err(String::from("Unable to read file")),
     }
-
-    
-
 }
 
 #[cfg(test)]

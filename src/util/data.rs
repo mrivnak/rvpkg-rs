@@ -1,10 +1,10 @@
 use serde::Deserialize;
 
-#[derive(Clone, Debug)]  // Implement clone trait for package
+#[derive(Clone, Debug)] // Implement clone trait for package
 pub struct Package {
     pub name: String,
     pub installed: bool,
-    pub dependencies: Vec<String>
+    pub dependencies: Vec<String>,
 }
 
 impl Package {
@@ -22,13 +22,13 @@ impl Package {
     }
 }
 
-impl From::<Package> for String {
+impl From<Package> for String {
     fn from(package: Package) -> String {
         return package.name;
     }
 }
 
-impl From::<&Package> for String {
+impl From<&Package> for String {
     fn from(package: &Package) -> String {
         let meta_package = package.clone();
         return meta_package.name;
@@ -37,8 +37,8 @@ impl From::<&Package> for String {
 
 #[derive(Deserialize)]
 pub struct Settings {
-    pub verbose:    bool,
+    pub verbose: bool,
     pub no_confirm: bool,
-    pub show_deps:  bool,
-    pub color:      bool,
+    pub show_deps: bool,
+    pub color: bool,
 }

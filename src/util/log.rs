@@ -8,14 +8,19 @@ impl Log {
     pub fn install_package(&self, package: &String) {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-        let _ = db.insert(bincode::serialize(package).unwrap(), bincode::serialize(&true).unwrap());
+        let _ = db.insert(
+            bincode::serialize(package).unwrap(),
+            bincode::serialize(&true).unwrap(),
+        );
         let _ = db.flush();
     }
 
     pub fn has_package(&self, package: &String) -> bool {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-        let has = db.contains_key(bincode::serialize(package).unwrap()).unwrap();
+        let has = db
+            .contains_key(bincode::serialize(package).unwrap())
+            .unwrap();
 
         let _ = db.flush();
 
@@ -29,8 +34,7 @@ impl Log {
 
             let result = bincode::deserialize(&value.unwrap()).unwrap();
             return result;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -88,9 +92,8 @@ mod tests {
         };
 
         log.install_package(&String::from("rvpkg"));
-        
+
         assert_eq!(true, log.is_installed(&String::from("rvpkg")));
         assert_ne!(true, log.is_installed(&String::from("rustc")));
     }
-    
 }

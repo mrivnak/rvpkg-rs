@@ -15,7 +15,7 @@ impl DB {
                     installed: false,
                     dependencies: deps.split_terminator(";").map(|s| s.to_string()).collect(),
                 });
-            },
+            }
             Err(e) => return Err(e),
         }
     }
@@ -27,7 +27,7 @@ impl DB {
         match value {
             Ok(v) => {
                 return Ok(bincode::deserialize(&v.unwrap()).unwrap());
-            },
+            }
             Err(e) => return Err(e.to_string()),
         }
     }
@@ -49,7 +49,9 @@ impl DB {
     pub fn has_package(&self, package: &String) -> bool {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-        let has = db.contains_key(bincode::serialize(package).unwrap()).unwrap();
+        let has = db
+            .contains_key(bincode::serialize(package).unwrap())
+            .unwrap();
 
         let _ = db.flush();
 
@@ -59,7 +61,10 @@ impl DB {
     pub fn add_raw(&self, name: &String, deps: &String) {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-        let _ = db.insert(bincode::serialize(name).unwrap(), bincode::serialize(deps).unwrap());
+        let _ = db.insert(
+            bincode::serialize(name).unwrap(),
+            bincode::serialize(deps).unwrap(),
+        );
         let _ = db.flush();
     }
 
@@ -79,13 +84,18 @@ impl DB {
             if items.len() == 1 {
                 let package = items[0];
 
-                let _ = db.insert(bincode::serialize(package).unwrap(), bincode::serialize("").unwrap());
-            }
-            else {
+                let _ = db.insert(
+                    bincode::serialize(package).unwrap(),
+                    bincode::serialize("").unwrap(),
+                );
+            } else {
                 let package = items[0];
                 let deps = items[1];
 
-                let _ = db.insert(bincode::serialize(package).unwrap(), bincode::serialize(deps).unwrap());
+                let _ = db.insert(
+                    bincode::serialize(package).unwrap(),
+                    bincode::serialize(deps).unwrap(),
+                );
             }
         }
 
@@ -103,7 +113,7 @@ impl DB {
     fn get_size(&self) -> usize {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-        return db.len()
+        return db.len();
     }
 }
 
@@ -138,7 +148,7 @@ mod tests {
 
         let val_out = db.get_raw(&String::from("key")).unwrap();
 
-        assert_eq!(val_in, val_out);        
+        assert_eq!(val_in, val_out);
     }
 
     #[test]

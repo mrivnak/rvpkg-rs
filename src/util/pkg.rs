@@ -1,6 +1,6 @@
+use super::data::Package;
 use super::db;
 use super::log;
-use super::data::Package;
 
 pub fn parse_packages(packages: &[String]) -> Vec<Package> {
     let mut out_pkgs: Vec<Package> = Vec::new();
@@ -14,9 +14,11 @@ pub fn parse_packages(packages: &[String]) -> Vec<Package> {
 
         if db.has_package(pkg) {
             out_pkgs.push(db.get_package(pkg).unwrap());
-        }
-        else {
-            eprintln!("Error: Package \"{}\" not found in database, exiting...", pkg);
+        } else {
+            eprintln!(
+                "Error: Package \"{}\" not found in database, exiting...",
+                pkg
+            );
             std::process::exit(1);
         }
     }

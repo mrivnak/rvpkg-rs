@@ -1,4 +1,4 @@
-use clap::{Arg, App, AppSettings, SubCommand};
+use clap::{App, AppSettings, Arg, SubCommand};
 
 mod util;
 
@@ -9,11 +9,10 @@ fn main() {
     const NAME: &'static str = env!("CARGO_PKG_NAME");
     const VERSION: &'static str = env!("CARGO_PKG_VERSION");
     const AUTHORS: &'static str = env!("CARGO_PKG_AUTHORS");
-    const DESCRIPTION: &'static str = env!("CARGO_PKG_DESCRIPTION"); 
+    const DESCRIPTION: &'static str = env!("CARGO_PKG_DESCRIPTION");
 
     let config = std::fs::read_to_string(util::paths::get_config_path()).unwrap();
     let settings: Settings = toml::from_str(config.as_str()).unwrap();
-
 
     // Argument parsing
     let app = App::new(NAME)
@@ -21,86 +20,98 @@ fn main() {
         .about(DESCRIPTION)
         .author(AUTHORS)
         .setting(AppSettings::SubcommandRequiredElseHelp)
-        .arg(Arg::with_name("verbose")
-            .short("v")
-            .long("verbose")
-            .help("Display verbose output")
-            .global(true))
-        .arg(Arg::with_name("no-confirm")
-            .short("y")
-            .long("no-confirm")
-            .help("Accept package updates without prompting the user")
-            .global(true))
-        .arg(Arg::with_name("show-deps")
-            .short("d")
-            .long("show-deps")
-            .help("Display package dependencies")
-            .global(true))
-        .arg(Arg::with_name("color")
-            .short("c")
-            .long("color")
-            .help("Display colored output")
-            .global(true))
-        .subcommand(SubCommand::with_name("add")
-            .about("Adds package(s) to the system package list")
-            .arg(Arg::with_name("PACKAGE")
-                .help("Package(s) to add")
-                .required(true)
-                .min_values(1)
-            )
+        .arg(
+            Arg::with_name("verbose")
+                .short("v")
+                .long("verbose")
+                .help("Display verbose output")
+                .global(true),
         )
-        .subcommand(SubCommand::with_name("check")
-            .about("Displays information about a package")
-            .arg(Arg::with_name("PACKAGE")
-                .help("Package(s) to check")
-                .required(true)
-                .min_values(1)
-            )
+        .arg(
+            Arg::with_name("no-confirm")
+                .short("y")
+                .long("no-confirm")
+                .help("Accept package updates without prompting the user")
+                .global(true),
         )
-        .subcommand(SubCommand::with_name("count")
-            .about("Displays the number of installed packages")
+        .arg(
+            Arg::with_name("show-deps")
+                .short("d")
+                .long("show-deps")
+                .help("Display package dependencies")
+                .global(true),
         )
-        .subcommand(SubCommand::with_name("list")
-            .about("Displays the list of installed packages")
+        .arg(
+            Arg::with_name("color")
+                .short("c")
+                .long("color")
+                .help("Display colored output")
+                .global(true),
         )
-        .subcommand(SubCommand::with_name("search")
-            .about("Searches for a package")
-            .arg(Arg::with_name("SEARCH")
-                .help("Search term")
-                .required(true)
-            )
+        .subcommand(
+            SubCommand::with_name("add")
+                .about("Adds package(s) to the system package list")
+                .arg(
+                    Arg::with_name("PACKAGE")
+                        .help("Package(s) to add")
+                        .required(true)
+                        .min_values(1),
+                ),
         )
-        .subcommand(SubCommand::with_name("import")
-            .about("Imports a package database from a csv file")
-            .arg(Arg::with_name("replace")
-                .short("r")
-                .long("replace")
-                .help("Replace database contents")
-                .conflicts_with("merge")
-                .conflicts_with("raw")
-            )
-            .arg(Arg::with_name("merge")
-                .short("m")
-                .long("merge")
-                .help("Merge database contents")
-                .conflicts_with("replace")
-                .conflicts_with("raw")
-            )
-            .arg(Arg::with_name("raw")
-                .short("w")
-                .long("raw")
-                .takes_value(true)
-                .value_name("DATA")
-                .help("Imports a single line in csv format")
-                .conflicts_with("PATH")
-                // .validator(util::csv_format)  // TODO: write validator
-            )
-            .arg(Arg::with_name("PATH")
-                .help("Path to CSV file")
-                .required(true)
-                .conflicts_with("raw")
-                .validator(util::file_exists)
-            )
+        .subcommand(
+            SubCommand::with_name("check")
+                .about("Displays information about a package")
+                .arg(
+                    Arg::with_name("PACKAGE")
+                        .help("Package(s) to check")
+                        .required(true)
+                        .min_values(1),
+                ),
+        )
+        .subcommand(
+            SubCommand::with_name("count").about("Displays the number of installed packages"),
+        )
+        .subcommand(SubCommand::with_name("list").about("Displays the list of installed packages"))
+        .subcommand(
+            SubCommand::with_name("search")
+                .about("Searches for a package")
+                .arg(Arg::with_name("SEARCH").help("Search term").required(true)),
+        )
+        .subcommand(
+            SubCommand::with_name("import")
+                .about("Imports a package database from a csv file")
+                .arg(
+                    Arg::with_name("replace")
+                        .short("r")
+                        .long("replace")
+                        .help("Replace database contents")
+                        .conflicts_with("merge")
+                        .conflicts_with("raw"),
+                )
+                .arg(
+                    Arg::with_name("merge")
+                        .short("m")
+                        .long("merge")
+                        .help("Merge database contents")
+                        .conflicts_with("replace")
+                        .conflicts_with("raw"),
+                )
+                .arg(
+                    Arg::with_name("raw")
+                        .short("w")
+                        .long("raw")
+                        .takes_value(true)
+                        .value_name("DATA")
+                        .help("Imports a single line in csv format")
+                        .conflicts_with("PATH"), // .validator(util::csv_format)  // TODO: write validator
+                )
+                .arg(
+                    Arg::with_name("PATH")
+                        .help("Path to CSV file")
+                        .required(true)
+                        .conflicts_with("raw")
+                        .validator(util::file_exists),
+                ),
         );
 
     let matches = app.get_matches();
@@ -109,51 +120,64 @@ fn main() {
         verbose: matches.is_present("verbose") || settings.verbose,
         no_confirm: matches.is_present("no_confirm") || settings.no_confirm,
         show_deps: matches.is_present("show-deps") || settings.show_deps,
-        color: matches.is_present("color") || settings.color
+        color: matches.is_present("color") || settings.color,
     };
 
     match matches.subcommand() {
         ("add", Some(sub_matches)) => {
-            let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();  // Get package arguments
+            let packages: Vec<String> = sub_matches
+                .values_of("PACKAGE")
+                .unwrap()
+                .map(|x| String::from(x))
+                .collect(); // Get package arguments
             let packages = util::pkg::parse_packages(packages.as_slice());
 
             add(&settings, packages.as_slice());
-        },
+        }
         ("check", Some(sub_matches)) => {
-            let packages: Vec<String> = sub_matches.values_of("PACKAGE").unwrap().map(|x| String::from(x)).collect();
+            let packages: Vec<String> = sub_matches
+                .values_of("PACKAGE")
+                .unwrap()
+                .map(|x| String::from(x))
+                .collect();
             let packages = util::pkg::parse_packages(packages.as_slice());
 
             check(&settings, packages.as_slice());
-        },
+        }
         ("count", _) => {
             count(&settings);
-        },
+        }
         ("list", _) => {
             list(&settings);
-        },
+        }
         ("search", Some(sub_matches)) => {
             let package: String = String::from(sub_matches.value_of("SEARCH").unwrap());
             search(&settings, &package);
-        },
+        }
         ("import", Some(sub_matches)) => {
             let raw = sub_matches.is_present("raw");
 
             if raw {
                 let data = String::from(sub_matches.value_of("raw").unwrap());
                 import_raw(&settings, &data);
-            }
-            else {
+            } else {
                 let path = String::from(sub_matches.value_of("PATH").unwrap());
                 let merge = sub_matches.is_present("merge");
                 let replace = sub_matches.is_present("replace");
                 let mut mode = 0;
-                if merge { mode = 1 };
-                if replace { mode = 2 };
+                if merge {
+                    mode = 1
+                };
+                if replace {
+                    mode = 2
+                };
 
                 import(&settings, &path, mode);
             }
         }
-        _ => { unreachable!() }
+        _ => {
+            unreachable!()
+        }
     }
 }
 
@@ -172,12 +196,10 @@ fn add(settings: &Settings, packages: &[Package]) {
 
         if line.as_str() == "y" || line.as_str() == "" {
             // continue
-        }
-        else if line.as_str() == "n" {
+        } else if line.as_str() == "n" {
             eprintln!("Exiting...");
             std::process::exit(1);
-        }
-        else {
+        } else {
             eprintln!("Unrecognized input, exiting...");
             std::process::exit(1);
         }
@@ -196,7 +218,15 @@ fn count(settings: &Settings) {
         path: util::paths::get_log_path(),
     };
 
-    println!("{}{}", log.get_size(), if settings.verbose { " package(s) installed" } else { "" })
+    println!(
+        "{}{}",
+        log.get_size(),
+        if settings.verbose {
+            " package(s) installed"
+        } else {
+            ""
+        }
+    )
 }
 
 fn list(settings: &Settings) {
@@ -215,9 +245,9 @@ fn search(settings: &Settings, package: &String) {
     };
 
     let results = db.find_key(package);
-        for result in results {
+    for result in results {
         println!("{}", result);
-    }    
+    }
 }
 
 fn import(settings: &Settings, path: &String, umode: u8) {
@@ -234,8 +264,7 @@ fn import(settings: &Settings, path: &String, umode: u8) {
                 unreachable!();
             }
         }
-    }
-    else {
+    } else {
         print!("Merge or replace database? (m/r): ");
         use std::io::Write;
         std::io::stdout().flush().unwrap();
@@ -254,10 +283,8 @@ fn import(settings: &Settings, path: &String, umode: u8) {
                 eprintln!("Unrecognized input, exiting...");
                 std::process::exit(1);
             }
-
         }
     }
-
 
     let db = util::db::DB {
         path: util::paths::get_db_path(),
@@ -272,19 +299,18 @@ fn import_raw(settings: &Settings, data: &String) {
     };
 
     let items: Vec<&str> = data.split_terminator(",").collect();
-        if items.len() > 2 {
-            eprintln!("Error: invalid csv format");
-            eprintln!("Expected : \"<name>,<dep0>;<dep1>;\"");
-        }
-        if items.len() == 1 {
-            let package = items[0];
+    if items.len() > 2 {
+        eprintln!("Error: invalid csv format");
+        eprintln!("Expected : \"<name>,<dep0>;<dep1>;\"");
+    }
+    if items.len() == 1 {
+        let package = items[0];
 
-            db.add_raw(&String::from(package), &String::from(""));
-        }
-        else {
-            let package = items[0];
-            let deps = items[1];
+        db.add_raw(&String::from(package), &String::from(""));
+    } else {
+        let package = items[0];
+        let deps = items[1];
 
-            db.add_raw(&String::from(package), &String::from(deps));
-        }
+        db.add_raw(&String::from(package), &String::from(deps));
+    }
 }
