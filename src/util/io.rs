@@ -44,9 +44,9 @@ pub fn print_pkg_table(packages: &[super::data::Package], settings: &super::data
                     table.add_row(Row::new(vec![
                         Cell::new(dep)
                             .with_style(Attr::ForegroundColor(color::BRIGHT_BLACK)),
-                        Cell::new(if super::pkg::is_installed(&pkg.name) { "Y" } else { "N" })
+                        Cell::new(if super::pkg::is_installed(dep) { "Y" } else { "N" })
                             .with_style(Attr::ForegroundColor(
-                                if super::pkg::is_installed(&pkg.name) {
+                                if super::pkg::is_installed(dep) {
                                     color::GREEN
                                 }
                                 else {
@@ -61,7 +61,7 @@ pub fn print_pkg_table(packages: &[super::data::Package], settings: &super::data
                 else {
                     table.add_row(Row::new(vec![
                         Cell::new(dep),
-                        Cell::new(if super::pkg::is_installed(&pkg.name) { "Y" } else { "N" }),
+                        Cell::new(if super::pkg::is_installed(dep) { "Y" } else { "N" }),
                         Cell::new("D")
                     ]));
                 }

@@ -149,10 +149,30 @@ fn main() {
 
 fn add(settings: &Settings, packages: &[util::data::Package]) {
     // TODO: implement add
+    util::io::print_pkg_table(&packages, &settings);
+
+    print!("Confirm changes? (Y/n): ");
+    use std::io::Write;
+    std::io::stdout().flush().unwrap();
+
+    let line: String = text_io::read!("{}\n");
+    let line = line.to_ascii_lowercase();
+
+    if line.as_str() == "y" || line.as_str() == "" {
+        let package_names: Vec<String> = packages.iter().map(|x| x.clone().name).collect();
+        util::pkg::install(package_names.as_slice());
+    }
+    else if line.as_str() == "n" {
+        eprintln!("Exiting...");
+        std::process::exit(1);
+    }
+    else {
+        eprintln!("Unrecognized input, exiting...");
+        std::process::exit(1);
+    }
 }
 
 fn check(settings: &Settings, packages: &[util::data::Package]) {
-    // TODO: implement check
     util::io::print_pkg_table(&packages, &settings);
 }
 

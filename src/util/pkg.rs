@@ -47,10 +47,12 @@ pub fn is_installed(package: &String) -> bool {
     return log.is_installed(package);
 }
 
-pub fn install(package: &String) {
+pub fn install(packages: &[String]) {
     let log = log::Log {
         path: super::paths::get_log_path(),
     };
 
-    log.install_package(package);
+    for pkg in packages {
+        log.install_package(pkg);
+    }
 }
