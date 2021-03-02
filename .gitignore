@@ -16,3 +16,4 @@ tests/files/*
 !tests/files/test_import.csv
 
 fs/usr/share/rvpkg/packages.db/
+fs/var/lib/rvpkg/package_log.db/

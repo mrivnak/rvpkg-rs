@@ -14,12 +14,14 @@ pub fn print_pkg_table(packages: &[super::data::Package], settings: &super::data
     ]));
 
     for pkg in packages {
-        let color = get_color(settings.color, super::pkg::is_installed(&pkg.name));
+        let is_installed = super::pkg::is_installed(&pkg.name);
+        let color = get_color(settings.color, is_installed);
 
         table.add_row(Row::new(vec![
             Cell::new(pkg.name.as_str()),
-            Cell::new(pkg.name.as_str())
-                .with_style(Attr::ForegroundColor(color))
+            Cell::new(if is_installed { "Y" } else { "N" })
+                .with_style(Attr::ForegroundColor(color)),
+            Cell::new("E")
         ]));
         
         if settings.show_deps {
