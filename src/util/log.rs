@@ -67,7 +67,15 @@ impl Log {
     pub fn get_size(&self) -> usize {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-        return db.len();
+        let mut len: usize = 0;
+        for item in db.iter() {
+            let kv_pair = item.unwrap();
+            if bincode::deserialize(&kv_pair.1).unwrap() {
+                len += 1;
+            }
+        }
+
+        return len;
     }
 }
 
