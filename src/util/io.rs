@@ -1,5 +1,5 @@
 pub fn print_pkg_table(packages: &[super::data::Package], settings: &super::data::Settings) {
-    use prettytable::{Attr, Cell, Row, Table, format};
+    use prettytable::{Attr, Cell, Row, Table, color, format};
 
     let mut table = Table::new();
     table.set_format(*format::consts::FORMAT_NO_BORDER_LINE_SEPARATOR);
@@ -14,18 +14,58 @@ pub fn print_pkg_table(packages: &[super::data::Package], settings: &super::data
     ]));
 
     for pkg in packages {
-        let is_installed = super::pkg::is_installed(&pkg.name);
-        let color = get_color(settings.color, is_installed);
-
-        table.add_row(Row::new(vec![
-            Cell::new(pkg.name.as_str()),
-            Cell::new(if is_installed { "Y" } else { "N" })
-                .with_style(Attr::ForegroundColor(color)),
-            Cell::new("E")
-        ]));
+        if settings.color {
+            table.add_row(Row::new(vec![
+                Cell::new(pkg.name.as_str()),
+                Cell::new(if super::pkg::is_installed(&pkg.name) { "Y" } else { "N" })
+                    .with_style(Attr::ForegroundColor(
+                        if super::pkg::is_installed(&pkg.name) {
+                            color::GREEN
+                        }
+                        else {
+                            color::RED
+                        }
+                    )
+                ),
+                Cell::new("E")
+            ]));
+        }        
+        else {
+            table.add_row(Row::new(vec![
+                Cell::new(pkg.name.as_str()),
+                Cell::new(if super::pkg::is_installed(&pkg.name) { "Y" } else { "N" }),
+                Cell::new("E")
+            ]));
+        }
         
         if settings.show_deps {
-
+            for dep in &pkg.dependencies {
+                if settings.color {
+                    table.add_row(Row::new(vec![
+                        Cell::new(dep)
+                            .with_style(Attr::ForegroundColor(color::BRIGHT_BLACK)),
+                        Cell::new(if super::pkg::is_installed(&pkg.name) { "Y" } else { "N" })
+                            .with_style(Attr::ForegroundColor(
+                                if super::pkg::is_installed(&pkg.name) {
+                                    color::GREEN
+                                }
+                                else {
+                                    color::RED
+                                }
+                            )
+                        ),
+                        Cell::new("D")
+                            .with_style(Attr::ForegroundColor(color::BRIGHT_BLACK))
+                    ]));
+                }
+                else {
+                    table.add_row(Row::new(vec![
+                        Cell::new(dep),
+                        Cell::new(if super::pkg::is_installed(&pkg.name) { "Y" } else { "N" }),
+                        Cell::new("D")
+                    ]));
+                }
+            }
         }
     }
 
@@ -47,20 +87,6 @@ pub fn get_lines(path: &str) -> Result<Vec<String>, String> {
 
     
 
-}
-
-fn get_color(use_color: bool, is_installed: bool) -> u32 {
-    use prettytable::color;
-
-    if use_color && is_installed {
-        return color::GREEN;
-    }
-    else if use_color && !is_installed {
-        return color::RED;
-    }
-    else {
-        return color::WHITE;
-    };
 }
 
 #[cfg(test)]
