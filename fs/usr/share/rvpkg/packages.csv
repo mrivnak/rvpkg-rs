@@ -49,8 +49,8 @@ bdftopcf,
 beautifultable,python;
 berkeley-db,sharutils;
 biber,perl-autovivification;perl-business-isbn;perl-business-ismn;perl-business-issn;perl-class-accessor;perl-data-compare;perl-data-dump;perl-data-uniqid;perl-datetime-calendar-julian;perl-datetime-format-builder;perl-encode-eucjpascii;perl-encode-hanextra;perl-encode-jis2k;perl-file-slurper;perl-file-which;perl-io-string;perl-ipc-run3;perl-lingua-translit;perl-list-allutils;perl-list-moreutils;perl-log-log4perl;perl-lwp-protocol-https;perl-module-build;perl-parse-recdescent;perl-perlio-utf8-strict;perl-regexp-common;perl-sort-key;perl-test-differences;perl-text-bibtex;perl-text-csv;perl-text-roman;perl-unicode-collate;perl-unicode-linebreak;perl-xml-libxml-simple;perl-xml-libxslt;perl-xml-writer;texlive;
-bind,berkeley-db;cmocka;curl;doxygen;json-c;libcap;libidn2;libuv;libxml2;libxslt;linux-pam;mariadb;mit-kerberos-v5;openldap;perl-net-dns;postgresql;sphinx;texlive;unixodbc;
-bind-utilities,json-c;libcap;libuv;libxml2;sphinx;
+bind,berkeley-db;curl;doxygen;json-c;libcap;libidn2;libuv;libxml2;libxslt;linux-pam;mariadb;mit-kerberos-v5;openldap;perl-net-dns;postgresql;texlive;unixodbc;
+bind-utilities,json-c;libcap;libuv;libxml2;
 bindfs,
 binutils,
 bison,
@@ -92,7 +92,7 @@ clucene,boost;cmake;
 clutter,atk;cogl;gobject-introspection;gtk+3;gtk-doc;json-glib;libgudev;libinput;libxkbcommon;wayland;
 clutter-gst,clutter;gobject-introspection;gst-plugins-bad;gst-plugins-base;gtk-doc;libgudev;
 clutter-gtk,clutter;gobject-introspection;gtk+3;gtk-doc;
-cmake,curl;git;libarchive;libuv;nghttp2;qt;sphinx;subversion;
+cmake,curl;git;libarchive;libuv;nghttp2;qt;subversion;
 cmocka,
 cogl,cairo;gdk-pixbuf;glu;gobject-introspection;gst-plugins-base;gtk-doc;mesa;pango;sdl;sdl2;wayland;
 colord,bash-completion;colord-gtk;dbus;glib;gnome-desktop;gobject-introspection;libgudev;libgusb;libxslt;little-cms;polkit;sane;sqlite;systemd;vala;
@@ -103,7 +103,7 @@ consolekit2,automake;gettext;glib;gobject-introspection;gtk-doc;libdrm;libgudev;
 coreutils,
 cpio,texlive;
 cracklib,python2;
-cryptsetup,argon2;json-c;libpwquality;lvm2;passwdqc;popt;python2;
+cryptsetup,json-c;libpwquality;lvm2;popt;python2;
 cssselect,
 cuda,
 cunit,
@@ -111,7 +111,7 @@ cups,avahi;colord;dbus;gnutls;libpaper;libusb;linux-pam;mit-kerberos-v5;openjdk;
 cups-filters,avahi;cups;ghostscript;glib;libjpeg-turbo;libpng;libtiff;little-cms;mupdf;openldap;php;poppler;qpdf;
 cups-pk-helper,cups;polkit;
 curl,brotli;c-ares;gnutls;libidn2;libpsl;libssh2;make-ca;mit-kerberos-v5;nghttp2;openldap;samba;stunnel;valgrind;
-cyrus-sasl,berkeley-db;dmalloc;krb4;linux-pam;mariadb;mit-kerberos-v5;openjdk;openldap;pod-pom-view-restructured;postgresql;sphinx;sqlite;
+cyrus-sasl,berkeley-db;linux-pam;mariadb;mit-kerberos-v5;openjdk;openldap;postgresql;sqlite;
 dash,libedit;
 datefudge,
 dblatex,
@@ -164,7 +164,7 @@ exiv2,cmake;curl;doxygen;graphviz;libssh;libxslt;
 exo,gtk+3;gtk-doc;libxfce4ui;libxfce4util;perl-uri;
 expat,
 expect,
-extra-cmake-modules,cmake;sphinx;
+extra-cmake-modules,cmake;
 faac,
 faad2,
 falkon,extra-cmake-modules;gnome-keyring;kde-frameworks;qtwebengine;
@@ -199,7 +199,7 @@ font-misc-misc,
 font-util,
 font-xfree86-type1,
 fontconfig,docbook-utils;freetype;json-c;libxml2;texlive;
-fontforge,giflib;git;gtk+3;libjpeg-turbo;libspiro;libtiff;libuninameslist;libxml2;sphinx;woff2;
+fontforge,giflib;git;gtk+3;libjpeg-turbo;libspiro;libtiff;libuninameslist;libxml2;woff2;
 fonttools,python;
 fop,apache-ant;xorg;
 frameworkintegration,
@@ -208,7 +208,7 @@ freetds,
 freetype,brotli;harfbuzz;libpng;which;
 frei0r-plugins,doxygen;gavl;opencv;
 fribidi,
-fuse,doxygen;python-pytest;
+fuse,doxygen;
 garcon,gtk+2;gtk+3;gtk-doc;libxfce4ui;
 gavl,doxygen;libpng;
 gawk,
@@ -233,7 +233,7 @@ ghostscript,cairo;cups;fontconfig;freetype;gtk+3;libidn;libjpeg-turbo;libpaper;l
 giflib,xmlto;
 gimp,aalib;alsa-lib;dbus-glib;gegl03;gexiv2;ghostscript;glib-networking;gtk+2;gtk-doc;gvfs;harfbuzz;iso-codes;libgudev;libjpeg-turbo;libmng;libmypaint;librsvg;libtiff;libwebp;little-cms;mypaint-brushes;openjpeg;poppler;python-python2-pygtk;python2-libxml2;sendmail;xdg-utils;xorg;
 git,asciidoc;curl;dblatex;pcre;pcre2;subversion;tk;valgrind;xmlto;
-gjs,cairo;dbus;gobject-introspection;gtk+3;js;valgrind;
+gjs,cairo;dbus;gobject-introspection;gtk+3;js68;valgrind;
 glew,mesa;
 glib,bindfs;dbus;docbook-xml45;docbook-xsl;gdb;gtk-doc;libxslt;pcre;
 glib-networking,glib;gnutls;gsettings-desktop-schemas;make-ca;
@@ -265,7 +265,7 @@ gnome-screenshot,gtk+3;libcanberra;
 gnome-session,dbus-glib;docbook-xml45;docbook-xsl;gconf;gnome-desktop;json-glib;libxslt;mesa;systemd;upower;xmlto;
 gnome-settings-daemon,alsa;colord;cups;fontconfig;gcr;geoclue;geocode-glib;gnome-desktop;libcanberra;libgweather;libnotify;librsvg;libwacom;little-cms;mutter;networkmanager;nss;pulseaudio;python-dbusmock;systemd;umockdev;upower;wayland;xorg-wacom-driver;
 gnome-shell,asciidoc;bash-completion;desktop-file-utils;evolution-data-server;gjs;gnome-autoar;gnome-bluetooth;gnome-control-center;gst-plugins-base;gtk-doc;mutter;networkmanager;sassc;startup-notification;systemd;
-gnome-shell-extensions,js;libgtop;sassc;
+gnome-shell-extensions,js68;libgtop;sassc;
 gnome-system-monitor,adwaita-icon-theme;desktop-file-utils;gtkmm3;itstool;libgtop;librsvg;
 gnome-terminal,dconf;desktop-file-utils;gnome-shell;gsettings-desktop-schemas;itstool;nautilus;pcre2;vte;
 gnome-themes-extra,gtk+2;gtk+3;librsvg;
@@ -275,8 +275,8 @@ gnome-video-effects,
 gnome-weather,gjs;libgweather;
 gnu-efi,
 gnumeric,dblatex;dconf;gobject-introspection;goffice;itstool;pygobject3;valgrind;
-gnupg,adns;curl;fig2dev;fuse;gnutls;imagemagick;libassuan;libgcrypt;libksba;libusb;npth;openldap;pinentry;sendmail;sqlite;texlive;
-gnutls,autogen;cmocka;datefudge;doxygen;gtk-doc;guile;libidn;libidn2;libseccomp;libtasn1;libunistring;make-ca;net-tools-cvs;nettle;p11-kit;texlive;trousers;unbound;valgrind;
+gnupg,curl;fuse;gnutls;imagemagick;libassuan;libgcrypt;libksba;libusb;npth;openldap;pinentry;sendmail;sqlite;texlive;
+gnutls,doxygen;gtk-doc;guile;libidn;libidn2;libseccomp;libtasn1;libunistring;make-ca;net-tools-cvs;nettle;p11-kit;texlive;unbound;valgrind;
 gobject-introspection,cairo;gjs;glib;gtk-doc;markdown;python-mako;
 goffice,ghostscript;gobject-introspection;gsettings-desktop-schemas;gtk+3;gtk-doc;libgsf;librsvg;libxslt;which;
 gparted,btrfs-progs;gtkmm3;parted;
@@ -296,7 +296,7 @@ grilo,avahi;docbook-utils;glib;gobject-introspection;gtk+3;gtk-doc;liboauth;libs
 groff,
 grub,
 gsettings-desktop-schemas,glib;gobject-introspection;
-gsl,sphinx;sphinx-rtd-theme;
+gsl,sphinx-rtd-theme;
 gsound,gobject-introspection;gtk-doc;vala;
 gspell,enchant;gobject-introspection;gtk+3;gtk-doc;iso-codes;vala;valgrind;
 gst-libav,ffmpeg;gst-plugins-base;valgrind;yasm;
@@ -359,7 +359,7 @@ java,
 jfsutils,
 joe,
 joypixels,
-js,autoconf213;clang;doxygen;icu;llvm;nasm;python2;which;
+js68,autoconf213;clang;doxygen;icu;llvm;nasm;python2;which;
 json-c,cmake;
 json-glib,glib;gobject-introspection;gtk-doc;
 k3b,ffmpeg;flac;kde-frameworks;lame;libburn;libdvdread;libkcddb;libmad;libmusicbrainz;libsamplerate;libsndfile;libvorbis;shared-mime-info;taglib;
@@ -525,7 +525,7 @@ libice,
 libidn,emacs;gtk-doc;mono;openjdk;pth;valgrind;
 libidn2,git;gtk-doc;libunistring;
 libindicator,
-libinput,gtk+3;libevdev;libwacom;mtdev;sphinx;valgrind;
+libinput,gtk+3;libevdev;libwacom;mtdev;valgrind;
 libiodbc,gtk+2;
 libiscsi,
 libisoburn,doxygen;libburn;libisofs;tk;
@@ -645,7 +645,7 @@ linux,
 linux-headers,
 linux-lts,
 linux-lts-headers,
-linux-pam,berkeley-db;docbook-xml45;docbook-xsl;fop;libaudit;libnsl;libtirpc;libxslt;lynx;prelude;
+linux-pam,berkeley-db;docbook-xml45;docbook-xsl;fop;libnsl;libtirpc;libxslt;lynx;
 linux-zen,
 linux-zen-headers,
 little-cms,libjpeg-turbo;libtiff;
@@ -659,7 +659,7 @@ lsof,libtirpc;
 lua,
 lua52,
 luit,
-lvm2,libaio;mdadm;reiserfsprogs;thin-provisioning-tools;valgrind;which;xfsprogs;
+lvm2,libaio;mdadm;reiserfsprogs;valgrind;which;xfsprogs;
 lxappearance,dbus-glib;docbook-xml45;docbook-xsl;gtk+2;libxslt;
 lxappearance-obconf,lxappearance;openbox;
 lxde-common,desktop-file-utils;hicolor-icon-theme;lxde-icon-theme;lxpanel;lxsession;pcmanfm;shared-mime-info;
@@ -682,7 +682,7 @@ make-ca,p11-kit;
 malix,mit-kerberos-v5;nss;sendmail;
 man-db,
 man-pages,
-mariadb,boost;cmake;libaio;libevent;libxml2;linux-pam;lz4;mit-kerberos-v5;pcre;ruby;sphinx;unixodbc;valgrind;
+mariadb,boost;cmake;libaio;libevent;libxml2;linux-pam;lz4;mit-kerberos-v5;pcre;ruby;unixodbc;valgrind;
 markdown,
 mc,doxygen;glib;gpm;pcre;samba;slang;unzip;xorg;zip;
 mdadm,sendmail;
@@ -692,7 +692,7 @@ mesa,libdrm;libgcrypt;libva;libvdpau;llvm;lm-sensors;nettle;python-mako;valgrind
 meson,
 milou,
 minisql,
-mit-kerberos-v5,cmocka;gnupg;keyutils;openldap;python-pyrad;resolv-wrapper;valgrind;
+mit-kerberos-v5,bind-utilities;gnupg;keyutils;openldap;valgrind;yasm;
 mkfontdir,
 mkfontscale,
 mlt,doxygen;fftw;frei0r-plugins;libexif;qt;sdl;sdl2;
@@ -949,7 +949,7 @@ plymouth-kcm,
 pm-utils,xmlto;
 pnmixer,alsa-utils;gtk+3;libnotify;
 pod-pom-view-restructured,
-polkit,docbook-xml45;docbook-xsl;glib;gobject-introspection;gtk-doc;js;libxslt;linux-pam;python-dbus-python;python-dbusmock;
+polkit,docbook-xml45;docbook-xsl;glib;gobject-introspection;gtk-doc;js78;libxslt;linux-pam;python-dbus-python;python-dbusmock;
 polkit-gnome,gtk+3;polkit;
 polkit-kde-agent,
 polkit-qt,cmake;polkit;qt;
@@ -976,7 +976,7 @@ python-argparse,python;python2;
 python-contextlib2,python;python2;
 python-coverage,python;python2;
 python-cython,python;python2;
-python-dbus-python,dbus;glib;pygobject3;python;python-docutils;python2;sphinx;sphinx-rtd-theme;
+python-dbus-python,dbus;glib;pygobject3;python;python-docutils;python2;sphinx-rtd-theme;
 python-dbusmock,python;
 python-decorator,python;
 python-doctools,python2;
@@ -1040,7 +1040,7 @@ ruby,berkeley-db;doxygen;graphviz;libyaml;tk;valgrind;
 rustc,clang;cmake;curl;gdb;libssh2;python2;
 rvpkg,rustc;
 rxvt-unicode,gdk-pixbuf;startup-notification;xorg;
-samba,avahi;bind;cmocka;cups;cyrus-sasl;fuse;gdb;git;gnupg;gnutls;gpgme;jansson;libaio;libarchive;libcap;libgcrypt;libnsl;libtirpc;libxslt;linecache2;linux-pam;lmdb;mit-kerberos-v5;nss;openldap;pbr;perl-parse-yapp;popt;py;python-argparse;python-contextlib2;python-coverage;python-doctools;python-extras;python-fixtures;python-hypothesis;python-mimeparse;python-pycryptodome;python-pytest;python-pytest-cov;python-six;python-subunit;python-traceback2;python-unittest2;python-virtualenv;python2-enum34;rpcsvc-proto;talloc;testresources;testscenarios;testtools;vala;valgrind;xfsprogs;
+samba,avahi;bind;cups;cyrus-sasl;fuse;gdb;git;gnupg;gnutls;gpgme;jansson;libaio;libarchive;libcap;libgcrypt;libnsl;libtirpc;libxslt;linecache2;linux-pam;lmdb;mit-kerberos-v5;nss;openldap;pbr;perl-parse-yapp;popt;py;python-argparse;python-contextlib2;python-coverage;python-doctools;python-extras;python-fixtures;python-hypothesis;python-mimeparse;python-pycryptodome;python-pytest;python-pytest-cov;python-six;python-subunit;python-traceback2;python-unittest2;python-virtualenv;python2-enum34;rpcsvc-proto;talloc;testresources;testscenarios;testtools;vala;valgrind;xfsprogs;
 sane,avahi;cups;gimp;gtk+2;libjpeg-turbo;libtiff;libusb;texlive;v4l-utils;xorg;
 sassc,
 sawfish,rep-gtk;which;
@@ -1085,7 +1085,7 @@ sxhkd,
 syndication,
 syntax-highlighting,
 sysstat,
-systemd,btrfs-progs;cryptsetup;curl;git;gnu-efi;gnutls;iptables;kexec-tools;libgcrypt;libidn;libmicrohttpd;libpwquality;libseccomp;libxkbcommon;linux-pam;lz4;make-ca;pcre2;polkit;qemu;qrencode;quota-tools;sphinx;valgrind;zsh;
+systemd,btrfs-progs;cryptsetup;curl;git;gnu-efi;gnutls;iptables;kexec-tools;libgcrypt;libidn;libmicrohttpd;libpwquality;libseccomp;libxkbcommon;linux-pam;lz4;make-ca;pcre2;polkit;qemu;qrencode;quota-tools;valgrind;zsh;
 systemsettings,
 taglib,boost;cmake;
 talloc,docbook-xml45;docbook-xsl;gdb;git;libtirpc;libxslt;python2;valgrind;xfsprogs;
@@ -1126,7 +1126,7 @@ uchardet,cmake;
 udisks,exfat;gobject-introspection;gtk-doc;libatasmart;libblockdev;libgudev;libiscsi;libxslt;lvm2;ntfs-3g;polkit;pygobject3;python-dbus-python;systemd;
 uhttpmock,gobject-introspection;gtk-doc;libsoup;vala;
 umockdev,libgudev;vala;
-unbound,doxygen;libevent;nettle;python2;sphinx;swig;
+unbound,doxygen;libevent;nettle;python2;swig;
 unixodbc,minisql;pth;
 unrar,
 unzip,

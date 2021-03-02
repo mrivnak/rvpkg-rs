@@ -1,5 +1,3 @@
-use std::path;
-
 use clap::{Arg, App, AppSettings, SubCommand};
 
 mod util;
@@ -79,16 +77,28 @@ fn main() {
                 .long("replace")
                 .help("Replace database contents")
                 .conflicts_with("merge")
+                .conflicts_with("raw")
             )
             .arg(Arg::with_name("merge")
                 .short("m")
                 .long("merge")
                 .help("Merge database contents")
                 .conflicts_with("replace")
+                .conflicts_with("raw")
+            )
+            .arg(Arg::with_name("raw")
+                .short("w")
+                .long("raw")
+                .takes_value(true)
+                .value_name("DATA")
+                .help("Imports a single line in csv format")
+                .conflicts_with("PATH")
+                // .validator(util::csv_format)  // TODO: write validator
             )
             .arg(Arg::with_name("PATH")
                 .help("Path to CSV file")
                 .required(true)
+                .conflicts_with("raw")
                 .validator(util::file_exists)
             )
         );
@@ -126,16 +136,24 @@ fn main() {
             search(&settings, &package);
         },
         ("import", Some(sub_matches)) => {
-            let path = String::from(sub_matches.value_of("PATH").unwrap());
-            let merge = sub_matches.is_present("merge");
-            let replace = sub_matches.is_present("replace");
-            let mut mode = 0;
-            if merge { mode = 1 };
-            if replace { mode = 2 };
+            let raw = sub_matches.is_present("raw");
 
-            import(&settings, &path, mode);
+            if raw {
+                let data = String::from(sub_matches.value_of("raw").unwrap());
+                import_raw(&settings, &data);
+            }
+            else {
+                let path = String::from(sub_matches.value_of("PATH").unwrap());
+                let merge = sub_matches.is_present("merge");
+                let replace = sub_matches.is_present("replace");
+                let mut mode = 0;
+                if merge { mode = 1 };
+                if replace { mode = 2 };
+
+                import(&settings, &path, mode);
+            }
         }
-        _ => {}
+        _ => { unreachable!() }
     }
 }
 
@@ -246,4 +264,27 @@ fn import(settings: &Settings, path: &String, umode: u8) {
     };
 
     db.import_csv(path, mode);
+}
+
+fn import_raw(settings: &Settings, data: &String) {
+    let db = util::db::DB {
+        path: util::paths::get_db_path(),
+    };
+
+    let items: Vec<&str> = data.split_terminator(",").collect();
+        if items.len() > 2 {
+            eprintln!("Error: invalid csv format");
+            eprintln!("Expected : \"<name>,<dep0>;<dep1>;\"");
+        }
+        if items.len() == 1 {
+            let package = items[0];
+
+            db.add_raw(&String::from(package), &String::from(""));
+        }
+        else {
+            let package = items[0];
+            let deps = items[1];
+
+            db.add_raw(&String::from(package), &String::from(deps));
+        }
 }

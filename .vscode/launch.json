@@ -82,13 +82,13 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug | tail",
+            "name": "Debug | import -w",
             "preLaunchTask": "rust: cargo build",
             "program": "${workspaceFolder}/target/debug/rvpkg",
             "args": [
-                "tail",
-                "-n",
-                "6"
+                "import",
+                "-w",
+                "pfetch,"
             ],
             "cwd": "${workspaceFolder}"
         },

@@ -56,7 +56,7 @@ impl DB {
         return has;
     }
 
-    fn add_raw(&self, name: &String, deps: &String) {
+    pub fn add_raw(&self, name: &String, deps: &String) {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
         let _ = db.insert(bincode::serialize(name).unwrap(), bincode::serialize(deps).unwrap());
