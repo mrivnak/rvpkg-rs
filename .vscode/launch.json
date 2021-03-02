@@ -5,7 +5,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug",
-            "preLaunchTask": "Rust: cargo build - rvpkg-rs",
+            "preLaunchTask": "rust: cargo build",
             "program": "${workspaceFolder}/target/debug/rvpkg",
             "args": [],
             "cwd": "${workspaceFolder}"
@@ -14,7 +14,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug | add",
-            "preLaunchTask": "Rust: cargo build - rvpkg-rs",
+            "preLaunchTask": "rust: cargo build",
             "program": "${workspaceFolder}/target/debug/rvpkg",
             "args": [
                 "add",
@@ -26,7 +26,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug | check",
-            "preLaunchTask": "Rust: cargo build - rvpkg-rs",
+            "preLaunchTask": "rust: cargo build",
             "program": "${workspaceFolder}/target/debug/rvpkg",
             "args": [
                 "check",
@@ -38,7 +38,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug | count",
-            "preLaunchTask": "Rust: cargo build - rvpkg-rs",
+            "preLaunchTask": "rust: cargo build",
             "program": "${workspaceFolder}/target/debug/rvpkg",
             "args": [
                 "count"
@@ -49,7 +49,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug | list",
-            "preLaunchTask": "Rust: cargo build - rvpkg-rs",
+            "preLaunchTask": "rust: cargo build",
             "program": "${workspaceFolder}/target/debug/rvpkg",
             "args": [
                 "list"
@@ -60,7 +60,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug | new",
-            "preLaunchTask": "Rust: cargo build - rvpkg-rs",
+            "preLaunchTask": "rust: cargo build",
             "program": "${workspaceFolder}/target/debug/rvpkg",
             "args": [
                 "new"
@@ -71,7 +71,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug | search",
-            "preLaunchTask": "Rust: cargo build - rvpkg-rs",
+            "preLaunchTask": "rust: cargo build",
             "program": "${workspaceFolder}/target/debug/rvpkg",
             "args": [
                 "search",
@@ -83,7 +83,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug | tail",
-            "preLaunchTask": "Rust: cargo build - rvpkg-rs",
+            "preLaunchTask": "rust: cargo build",
             "program": "${workspaceFolder}/target/debug/rvpkg",
             "args": [
                 "tail",
@@ -96,7 +96,7 @@
             "type": "lldb",
             "request": "launch",
             "name": "Debug | import",
-            "preLaunchTask": "Rust: cargo build - rvpkg-rs",
+            "preLaunchTask": "rust: cargo build",
             "program": "${workspaceFolder}/target/debug/rvpkg",
             "args": [
                 "import",

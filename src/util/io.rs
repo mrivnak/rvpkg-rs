@@ -1,11 +1,33 @@
-pub struct Log {
-    pub path: String
-}
+pub fn print_pkg_table(packages: &[super::data::Package], settings: &super::data::Settings) {
+    use prettytable::{Attr, Cell, Row, Table, format};
 
-impl Log {
-    pub fn get_log(&self) -> Vec<String> {
-        return get_lines(self.path.as_str()).unwrap();
+    let mut table = Table::new();
+    table.set_format(*format::consts::FORMAT_NO_BORDER_LINE_SEPARATOR);
+
+    table.add_row(Row::new(vec![
+        Cell::new("Name")
+            .with_style(Attr::Bold),
+        Cell::new("Installed")
+            .with_style(Attr::Bold),
+        Cell::new("Mode")
+            .with_style(Attr::Bold)
+    ]));
+
+    for pkg in packages {
+        let color = get_color(settings.color, super::pkg::is_installed(&pkg.name));
+
+        table.add_row(Row::new(vec![
+            Cell::new(pkg.name.as_str()),
+            Cell::new(pkg.name.as_str())
+                .with_style(Attr::ForegroundColor(color))
+        ]));
+        
+        if settings.show_deps {
+
+        }
     }
+
+    table.printstd();
 }
 
 pub fn get_lines(path: &str) -> Result<Vec<String>, String> {
@@ -23,6 +45,20 @@ pub fn get_lines(path: &str) -> Result<Vec<String>, String> {
 
     
 
+}
+
+fn get_color(use_color: bool, is_installed: bool) -> u32 {
+    use prettytable::color;
+
+    if use_color && is_installed {
+        return color::GREEN;
+    }
+    else if use_color && !is_installed {
+        return color::RED;
+    }
+    else {
+        return color::WHITE;
+    };
 }
 
 #[cfg(test)]

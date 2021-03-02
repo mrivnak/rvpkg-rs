@@ -50,7 +50,7 @@ impl DB {
     pub fn has_package(&self, package: &String) -> bool {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
-        let has = db.contains_key(package).unwrap();
+        let has = db.contains_key(bincode::serialize(package).unwrap()).unwrap();
 
         let _ = db.flush();
 
@@ -151,6 +151,7 @@ mod tests {
         let val_in = String::from("rustc;");
 
         db.add_raw(&String::from("rvpkg"), &val_in);
+        assert!(db.has_package(&String::from("rvpkg")));
 
         let val_out = db.get_package(&String::from("rvpkg")).unwrap();
 

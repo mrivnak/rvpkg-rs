@@ -1,13 +1,14 @@
 {
-    "tasks": [
-        {
-            "type": "cargo",
-            "subcommand": "build",
-            "problemMatcher": [
-                "$rustc"
-            ],
-            "group": "build",
-            "label": "Rust: cargo build - rvpkg-rs"
-        }
-    ]
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cargo",
+			"command": "build",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "rust: cargo build"
+		}
+	]
 }

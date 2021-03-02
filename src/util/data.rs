@@ -32,3 +32,11 @@ impl From::<&Package> for String {
         return meta_package.name;
     }
 }
+
+pub struct Settings {
+    pub verbose:    bool,
+    pub no_confirm: bool,
+    pub runtime:    bool,
+    pub show_deps:  bool,
+    pub color:      bool,
+}

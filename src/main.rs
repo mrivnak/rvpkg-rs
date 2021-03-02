@@ -2,13 +2,7 @@ use clap::{Arg, App, AppSettings, SubCommand};
 
 mod util;
 
-struct Settings {
-    verbose:    bool,
-    no_confirm: bool,
-    runtime:    bool,
-    show_deps:  bool,
-    color:      bool
-}
+use util::data::Settings;
 
 fn main() {
     // Get information from Cargo.toml
@@ -159,6 +153,7 @@ fn add(settings: &Settings, packages: &[util::data::Package]) {
 
 fn check(settings: &Settings, packages: &[util::data::Package]) {
     // TODO: implement check
+    util::io::print_pkg_table(&packages, &settings);
 }
 
 fn count(settings: &Settings) {
@@ -174,7 +169,6 @@ fn new(settings: &Settings) {
 }
 
 fn search(settings: &Settings, package: &String) {
-    // TODO: implement search
     let db = util::db::DB {
         path: util::paths::get_db_path(),
     };

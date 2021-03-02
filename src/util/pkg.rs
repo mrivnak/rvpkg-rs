@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use super::db;
 use super::log;
 use super::data::Package;
@@ -27,13 +25,13 @@ pub fn parse_packages(packages: &[String]) -> Vec<Package> {
     };
 
     for pkg in packages {
-        let meta_pkg = pkg.clone();
+        // let meta_pkg = pkg.clone();
 
-        if db.has_package(&meta_pkg) {
-            out_pkgs.push(db.get_package(&meta_pkg).unwrap());
+        if db.has_package(pkg) {
+            out_pkgs.push(db.get_package(pkg).unwrap());
         }
         else {
-            eprintln!("Error: Package \"{}\" not found in database, exiting...", meta_pkg);
+            eprintln!("Error: Package \"{}\" not found in database, exiting...", pkg);
             std::process::exit(1);
         }
     }
