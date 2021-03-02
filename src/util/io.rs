@@ -27,14 +27,14 @@ pub fn print_pkg_table(packages: &[super::data::Package], settings: &super::data
                         }
                     )
                 ),
-                Cell::new(if settings.verbose { "E" } else { "Explicit" })
+                Cell::new(if settings.verbose { "Explicit" } else { "E" })
             ]));
         }        
         else {
             table.add_row(Row::new(vec![
                 Cell::new(pkg.name.as_str()),
                 Cell::new(if super::pkg::is_installed(&pkg.name) { "Y" } else { "N" }),
-                Cell::new(if settings.verbose { "E" } else { "Explicit" })
+                Cell::new(if settings.verbose { "Explicit" } else { "E" })
             ]));
         }
         
@@ -54,7 +54,7 @@ pub fn print_pkg_table(packages: &[super::data::Package], settings: &super::data
                                 }
                             )
                         ),
-                        Cell::new(if settings.verbose { "D" } else { "Dependency" })
+                        Cell::new(if settings.verbose { "Dependency" } else { "D" })
                             .with_style(Attr::ForegroundColor(color::BRIGHT_BLACK))
                     ]));
                 }
@@ -62,7 +62,7 @@ pub fn print_pkg_table(packages: &[super::data::Package], settings: &super::data
                     table.add_row(Row::new(vec![
                         Cell::new(dep),
                         Cell::new(if super::pkg::is_installed(dep) { "Y" } else { "N" }),
-                        Cell::new(if settings.verbose { "D" } else { "Dependency" })
+                        Cell::new(if settings.verbose { "Dependency" } else { "D" })
                     ]));
                 }
             }
