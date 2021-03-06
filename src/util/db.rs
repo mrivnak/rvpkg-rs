@@ -10,7 +10,7 @@ impl DB {
 
         match raw {
             Ok(deps) => {
-                let mut deps_out = deps.split_terminator(";").map(|s| s.to_string()).collect();
+                let mut deps_out: Vec<String> = deps.split_terminator(";").map(|s| s.to_string()).collect();
                 deps_out.sort();
                 
                 return Ok(super::data::Package {
