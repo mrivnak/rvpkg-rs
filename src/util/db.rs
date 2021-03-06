@@ -10,10 +10,13 @@ impl DB {
 
         match raw {
             Ok(deps) => {
+                let mut deps_out = deps.split_terminator(";").map(|s| s.to_string()).collect();
+                deps_out.sort();
+                
                 return Ok(super::data::Package {
                     name: package.clone(),
                     installed: false,
-                    dependencies: deps.split_terminator(";").map(|s| s.to_string()).collect(),
+                    dependencies: deps_out,
                 });
             }
             Err(e) => return Err(e),

@@ -103,7 +103,8 @@ fn main() {
                         .takes_value(true)
                         .value_name("DATA")
                         .help("Imports a single line in csv format")
-                        .conflicts_with("PATH"), // .validator(util::csv_format)  // TODO: write validator
+                        .conflicts_with("PATH"), 
+//                      .validator(util::csv_format)  // TODO: write validator
                 )
                 .arg(
                     Arg::with_name("PATH")
