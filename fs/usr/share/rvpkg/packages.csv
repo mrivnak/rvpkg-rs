@@ -920,6 +920,7 @@ perl-xml-libxml,perl;perl-alien-libxml2;perl-xml-sax;
 perl-xml-libxml-simple,perl;perl-xml-libxml;
 perl-xml-libxslt,libxslt;perl;perl-xml-libxml;
 perl-xml-namespacesupport,perl;
+perl-xml-parser,perl;
 perl-xml-sax,libxml2;perl;perl-xml-namespacesupport;perl-xml-sax-base;
 perl-xml-sax-base,perl;
 perl-xml-simple,perl;perl-xml-sax;
@@ -1224,7 +1225,6 @@ xkill,
 xlsatoms,
 xlsclients,
 xmessage,
-xml-parser,
 xmlto,docbook-xml45;docbook-xsl;fop;libxslt;links;lynx;
 xmodmap,
 xorg,libxau;libxcb;libxdmcp;mesa;twm;util-macros;xbitmaps;xcb-proto;xcb-util;xcb-util-cursor;xcb-util-image;xcb-util-keysyms;xcb-util-renderutil;xcb-util-wm;xclock;xcursor-themes;xinit;xkeyboard-config;xorg-applications;xorg-drivers;xorg-fonts;xorg-legacy;xorg-libraries;xorg-server;xorgproto;xterm;
