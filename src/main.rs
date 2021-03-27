@@ -245,7 +245,9 @@ fn search(settings: &Settings, package: &String) {
         path: util::paths::get_db_path(),
     };
 
-    let results = db.find_key(package);
+    let mut results = db.find_key(package);
+    results.sort();
+    
     for result in results {
         println!("{}", result);
     }
