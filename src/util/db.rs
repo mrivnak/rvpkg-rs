@@ -24,7 +24,7 @@ impl DB {
     }
 
     fn get_raw(&self, package: &String) -> Result<String, String> {
-        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();  // TODO: handle PermissionDenied Err better
         let value = db.get(bincode::serialize(package).unwrap());
 
         match value {
@@ -50,7 +50,7 @@ impl DB {
     }
 
     pub fn has_package(&self, package: &String) -> bool {
-        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();  // TODO: handle PermissionDenied Err better
 
         let has = db
             .contains_key(bincode::serialize(package).unwrap())
@@ -62,7 +62,7 @@ impl DB {
     }
 
     pub fn add_raw(&self, name: &String, deps: &String) {
-        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();  // TODO: handle PermissionDenied Err better
 
         let _ = db.insert(
             bincode::serialize(name).unwrap(),
@@ -76,7 +76,7 @@ impl DB {
             self.empty_db();
         }
 
-        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
+        let db: sled::Db = sled::open(self.path.as_str()).unwrap();  // TODO: handle PermissionDenied Err better
 
         for line in super::io::get_lines(path.as_str()).unwrap() {
             let items: Vec<&str> = line.split_terminator(",").collect();

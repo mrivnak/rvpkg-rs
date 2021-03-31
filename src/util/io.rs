@@ -61,7 +61,7 @@ pub fn print_pkg_table(packages: &[super::data::Package], settings: &super::data
                 if settings.color {
                     table.add_row(Row::new(vec![
                         Cell::new(dep).with_style(Attr::ForegroundColor(color::BRIGHT_BLACK)),
-                        Cell::new(if super::pkg::is_installed(&pkg.name) {
+                        Cell::new(if super::pkg::is_installed(dep) {
                             if settings.verbose {
                                 "Yes"
                             } else {
