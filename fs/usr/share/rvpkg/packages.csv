@@ -533,7 +533,7 @@ libinput,gtk+3;libevdev;libwacom;mtdev;valgrind;
 libiodbc,gtk+2;
 libiscsi,
 libisoburn,doxygen;libburn;libisofs;tk;
-libisofs,doxygen,
+libisofs,doxygen;
 libjpeg-turbo,cmake;nasm;yasm;
 libkcddb,kde-frameworks;libmusicbrainz;
 libkdcraw,kde-frameworks;libraw;
