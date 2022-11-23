@@ -15,9 +15,9 @@ jobs:
         run: ./scripts/set_version.sh ${{ github.ref_name }}
 
       - name: Install Rust Linux x86_64-unknown-linux-gnu
-        if: matrix.platform == 'ubuntu-latest'
         uses: actions-rs/toolchain@v1
         with:
+          toolchain: stable
           target: x86_64-unknown-linux-gnu
 
       - name: Create releases directory
