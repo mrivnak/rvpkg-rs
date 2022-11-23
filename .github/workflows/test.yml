@@ -15,6 +15,6 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      - name: Cargo Test
 
+      - name: Cargo Test
         run: cargo test
