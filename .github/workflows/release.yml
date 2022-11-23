@@ -1,0 +1,45 @@
+name: Build Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set release version
+        run: ./scripts/set_version.sh ${{ github.ref_name }}
+
+      - name: Install Rust Linux x86_64-unknown-linux-gnu
+        if: matrix.platform == 'ubuntu-latest'
+        uses: actions-rs/toolchain@v1
+        with:
+          target: x86_64-unknown-linux-gnu
+
+      - name: Create releases directory
+        run: mkdir release
+          
+      - name: Build Linux x86_64-unknown-linux-gnu
+        run: |
+          cargo build --release --target x86_64-unknown-linux-gnu
+          tar cvfJ ./release/rvpkg_${{ github.ref_name }}_linux_amd64.tar.xz ./target/x86_64-unknown-linux-gnu/release/rvpkg
+      
+      - name: Build Changelog
+        id: github_release
+        uses: mikepenz/release-changelog-builder-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: ${{ steps.github_release.outputs.changelog }}
+          fail_on_unmatched_files: false
+          files: |
+            ./release/*.tar.xz
+          name: Release ${{ github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
