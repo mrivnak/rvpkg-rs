@@ -1,7 +1,7 @@
 [package]
 name = "rvpkg"
-version = "6.0.0"
-authors = ["Michael Rivnak <mrivnak86@gmail.com>"]
+version = "0.0.0"
+authors = ["Michael Rivnak <rivnakm1@gmail.com>"]
 description = "LFS Package Tracking System"
 edition = "2018"
 
