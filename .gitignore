@@ -17,3 +17,5 @@ tests/files/*
 
 fs/usr/share/rvpkg/packages.db/
 fs/var/lib/rvpkg/package_log.db/
+
+*.code-workspace

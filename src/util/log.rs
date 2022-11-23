@@ -39,19 +39,6 @@ impl Log {
         }
     }
 
-    pub fn get_keys(&self) -> Vec<String> {
-        let db: sled::Db = sled::open(self.path.as_str()).unwrap();
-
-        let mut out = Vec::new();
-        for item in db.iter() {
-            let key: String = bincode::deserialize(&item.unwrap().0).unwrap();
-            out.push(key);
-        }
-
-        out.sort();
-        return out;
-    }
-
     pub fn get_installed(&self) -> Vec<String> {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 

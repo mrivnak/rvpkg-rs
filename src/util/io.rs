@@ -118,7 +118,7 @@ pub fn get_lines(path: &str) -> Result<Vec<String>, String> {
             let data: Vec<String> = c.lines().map(String::from).collect();
             return Ok(data);
         }
-        Err(e) => Err(String::from("Unable to read file")),
+        Err(_) => Err(String::from("Unable to read file")),
     }
 }
 

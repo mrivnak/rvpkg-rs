@@ -3,7 +3,7 @@ name = "rvpkg"
 version = "0.0.0"
 authors = ["Michael Rivnak <rivnakm1@gmail.com>"]
 description = "LFS Package Tracking System"
-edition = "2018"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -2,7 +2,7 @@ use clap::{App, AppSettings, Arg, SubCommand};
 
 mod util;
 
-use util::data::{Package, Settings};
+use util::{data::{Package, Settings}, ImportMode};
 
 fn main() {
     // Get information from Cargo.toml
@@ -133,7 +133,7 @@ fn main() {
                 .collect(); // Get package arguments
             let packages = util::pkg::parse_packages(packages.as_slice());
 
-            add(&settings, packages.as_slice());
+            add(settings, packages.as_slice());
         }
         ("check", Some(sub_matches)) => {
             let packages: Vec<String> = sub_matches
@@ -143,37 +143,40 @@ fn main() {
                 .collect();
             let packages = util::pkg::parse_packages(packages.as_slice());
 
-            check(&settings, packages.as_slice());
+            check(settings, packages.as_slice());
         }
         ("count", _) => {
-            count(&settings);
+            count(settings);
         }
         ("list", _) => {
-            list(&settings);
+            list();
         }
         ("search", Some(sub_matches)) => {
             let package: String = String::from(sub_matches.value_of("SEARCH").unwrap());
-            search(&settings, &package);
+            search(package);
         }
         ("import", Some(sub_matches)) => {
             let raw = sub_matches.is_present("raw");
 
             if raw {
                 let data = String::from(sub_matches.value_of("raw").unwrap());
-                import_raw(&settings, &data);
+                import_raw(data);
             } else {
                 let path = String::from(sub_matches.value_of("PATH").unwrap());
                 let merge = sub_matches.is_present("merge");
                 let replace = sub_matches.is_present("replace");
-                let mut mode = 0;
+                let mode;
                 if merge {
-                    mode = 1
-                };
-                if replace {
-                    mode = 2
-                };
+                    mode = ImportMode::Merge;
+                }
+                else if replace {
+                    mode = ImportMode::Replace;
+                }
+                else {
+                    mode = get_mode();
+                }
 
-                import(&settings, &path, mode);
+                import(path, mode);
             }
         }
         _ => {
@@ -184,7 +187,7 @@ fn main() {
 
 // ###### Subcommand Functions ######
 
-fn add(settings: &Settings, packages: &[Package]) {
+fn add(settings: Settings, packages: &[Package]) {
     util::io::print_pkg_table(&packages, &settings);
 
     print!("Confirm changes? (Y/n): ");
@@ -210,11 +213,11 @@ fn add(settings: &Settings, packages: &[Package]) {
     util::pkg::install(package_names.as_slice());
 }
 
-fn check(settings: &Settings, packages: &[Package]) {
+fn check(settings: Settings, packages: &[Package]) {
     util::io::print_pkg_table(&packages, &settings);
 }
 
-fn count(settings: &Settings) {
+fn count(settings: Settings) {
     let log = util::log::Log {
         path: util::paths::get_log_path(),
     };
@@ -230,7 +233,7 @@ fn count(settings: &Settings) {
     )
 }
 
-fn list(settings: &Settings) {
+fn list() {
     let log = util::log::Log {
         path: util::paths::get_log_path(),
     };
@@ -240,12 +243,12 @@ fn list(settings: &Settings) {
     }
 }
 
-fn search(settings: &Settings, package: &String) {
+fn search(package: String) {
     let db = util::db::DB {
         path: util::paths::get_db_path(),
     };
 
-    let mut results = db.find_key(package);
+    let mut results = db.find_key(&package);
     results.sort();
     
     for result in results {
@@ -253,42 +256,7 @@ fn search(settings: &Settings, package: &String) {
     }
 }
 
-fn import(settings: &Settings, path: &String, umode: u8) {
-    let mode: bool;
-    if umode == 1 || umode == 2 {
-        match umode {
-            1 => {
-                mode = false;
-            }
-            2 => {
-                mode = true;
-            }
-            _ => {
-                unreachable!();
-            }
-        }
-    } else {
-        print!("Merge or replace database? (m/r): ");
-        use std::io::Write;
-        std::io::stdout().flush().unwrap();
-
-        let line: String = text_io::read!("{}\n");
-        let line = line.to_ascii_lowercase();
-
-        match line.as_str() {
-            "m" => {
-                mode = false;
-            }
-            "r" => {
-                mode = true;
-            }
-            _ => {
-                eprintln!("Unrecognized input, exiting...");
-                std::process::exit(1);
-            }
-        }
-    }
-
+fn import(path: String, mode: ImportMode) {
     let db = util::db::DB {
         path: util::paths::get_db_path(),
     };
@@ -296,7 +264,7 @@ fn import(settings: &Settings, path: &String, umode: u8) {
     db.import_csv(path, mode);
 }
 
-fn import_raw(settings: &Settings, data: &String) {
+fn import_raw(data: String) {
     let db = util::db::DB {
         path: util::paths::get_db_path(),
     };
@@ -309,11 +277,33 @@ fn import_raw(settings: &Settings, data: &String) {
     if items.len() == 1 {
         let package = items[0];
 
-        db.add_raw(&String::from(package), &String::from(""));
+        db.add_raw(String::from(package), String::from(""));
     } else {
         let package = items[0];
         let deps = items[1];
 
-        db.add_raw(&String::from(package), &String::from(deps));
+        db.add_raw(String::from(package), String::from(deps));
+    }
+}
+
+fn get_mode() -> ImportMode{
+    print!("Merge or replace database? (m/r): ");
+    use std::io::Write;
+    std::io::stdout().flush().unwrap();
+
+    let line: String = text_io::read!("{}\n");
+    let line = line.to_ascii_lowercase();
+
+    match line.as_str() {
+        "m" => {
+            return ImportMode::Merge;
+        }
+        "r" => {
+            return ImportMode::Replace;
+        }
+        _ => {
+            eprintln!("Unrecognized input, exiting...");
+            std::process::exit(1);
+        }
     }
 }

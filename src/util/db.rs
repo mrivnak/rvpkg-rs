@@ -1,5 +1,7 @@
 use bincode;
 
+use super::ImportMode;
+
 pub struct DB {
     pub path: String,
 }
@@ -61,19 +63,20 @@ impl DB {
         return has;
     }
 
-    pub fn add_raw(&self, name: &String, deps: &String) {
+    pub fn add_raw(&self, name: String, deps: String) {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();  // TODO: handle PermissionDenied Err better
 
         let _ = db.insert(
-            bincode::serialize(name).unwrap(),
-            bincode::serialize(deps).unwrap(),
+            bincode::serialize(&name).unwrap(),
+            bincode::serialize(&deps).unwrap(),
         );
         let _ = db.flush();
     }
 
-    pub fn import_csv(&self, path: &String, mode: bool) {
-        if mode {
-            self.empty_db();
+    pub fn import_csv(&self, path: String, mode: ImportMode) {
+        match mode {
+            ImportMode::Replace => self.empty_db(),
+            ImportMode::Merge => ()
         }
 
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();  // TODO: handle PermissionDenied Err better
@@ -113,6 +116,7 @@ impl DB {
         let _ = db.flush();
     }
 
+    #[allow(dead_code)] // Used in unit tests
     fn get_size(&self) -> usize {
         let db: sled::Db = sled::open(self.path.as_str()).unwrap();
 
@@ -122,6 +126,8 @@ impl DB {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn test_add_empty_db() {
         let db = super::DB {
@@ -130,7 +136,7 @@ mod tests {
 
         db.empty_db();
 
-        db.add_raw(&String::from("rvpkg"), &String::from("rustc;"));
+        db.add_raw(String::from("rvpkg"), String::from("rustc;"));
 
         assert_eq!(1, db.get_size());
 
@@ -147,7 +153,7 @@ mod tests {
 
         let val_in = String::from("test");
 
-        db.add_raw(&String::from("key"), &val_in);
+        db.add_raw(String::from("key"), val_in.clone());
 
         let val_out = db.get_raw(&String::from("key")).unwrap();
 
@@ -162,7 +168,7 @@ mod tests {
 
         let val_in = String::from("rustc;");
 
-        db.add_raw(&String::from("rvpkg"), &val_in);
+        db.add_raw(String::from("rvpkg"), val_in);
         assert!(db.has_package(&String::from("rvpkg")));
 
         let val_out = db.get_package(&String::from("rvpkg")).unwrap();
@@ -177,7 +183,7 @@ mod tests {
             path: String::from("tests/files/test_import_csv.db"),
         };
 
-        db.import_csv(&String::from("tests/files/test_import.csv"), true);
+        db.import_csv(String::from("tests/files/test_import.csv"), ImportMode::Replace);
 
         let val_out = db.get_package(&String::from("rvpkg")).unwrap();
 
