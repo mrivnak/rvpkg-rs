@@ -1,0 +1,8 @@
+FROM rust:latest
+
+COPY . /app
+WORKDIR /app
+
+RUN cargo build --workspace --exclude rvpkg-tests
+
+ENV PATH="/app/target/debug:${PATH}"

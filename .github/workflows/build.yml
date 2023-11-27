@@ -1,4 +1,4 @@
-name: Test
+name: Build
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
       - synchronize
 
 jobs:
-  cargo-test:
+  cargo-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,6 +20,6 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-
-      - name: Cargo Test
-        run: cargo test
+          
+      - name: Cargo Build
+        run: cargo build --release --workspace --exclude rvpkg-tests
