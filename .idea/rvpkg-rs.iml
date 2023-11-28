@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/rvpkg/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/rvpkg/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/rvpkg-tests/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rvbuild/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

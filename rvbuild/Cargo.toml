@@ -8,3 +8,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anyhow = "1.0.75"
+http = "1.0.0"
+http-serde = "2.0.0"
+semver = { version = "1.0.20", features = ["serde"] }
+serde = { version = "1.0.130", features = ["derive"] }
+toml = "0.8.8"
