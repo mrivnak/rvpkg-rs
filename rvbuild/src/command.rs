@@ -17,25 +17,17 @@ fn create_commands(commands: &str) -> Vec<Command> {
 
 fn split_lines(lines: &str) -> Vec<String> {
     let mut result = Vec::new();
-    let mut current_line = String::new();
-    let mut escape = false;
-    for c in lines.chars() {
-        if c == '\\' {
-            escape = true;
-        } else if c == '\n' {
-            if escape {
-                current_line.push(' ');
-                escape = false;
-            } else {
-                result.push(current_line);
-                current_line = String::new();
-            }
+    let mut current_line = Vec::new();
+    for line in lines.lines() {
+        if line.ends_with('\\') {
+            current_line.push(line.trim_end_matches('\\'));
+        } else if !current_line.is_empty() {
+            current_line.push(line);
+            result.push(current_line.join(" "));
+            current_line.clear();
         } else {
-            current_line.push(c);
+            result.push(line.to_owned());
         }
-    }
-    if !current_line.is_empty() {
-        result.push(current_line);
     }
     result
 }
