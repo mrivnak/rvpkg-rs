@@ -1,0 +1,19 @@
+[definition]
+name = "test"
+version = "0.0.0"
+revision = 1
+description = "description"
+license = ""
+homepage = "https://something.com"
+dependencies = []
+build_dependencies = []
+provides = ["test"]
+architectures = ["any", "x86_64", "i686"]
+
+[build]
+build = """
+    echo hello
+"""
+install = """
+    echo hello again
+"""

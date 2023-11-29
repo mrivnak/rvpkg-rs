@@ -1,0 +1,10 @@
+[package]
+name = "rvpkg"
+version = "2.0.0"
+authors = ["Mike Rivnak <rivnakm1@gmail.com>"]
+description = "RVOS Linux Package Manager"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.4.8", features = ["derive"] }
+rvbuild = { path = "../rvbuild" }
