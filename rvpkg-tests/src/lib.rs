@@ -32,7 +32,7 @@ mod tests {
             panic!("Failed to start container");
         }
 
-        thread::sleep(std::time::Duration::from_secs(1));
+        thread::sleep(std::time::Duration::from_millis(500));
     }
 
     fn run_in_container(name: &str, command: &mut Vec<&str>) -> Result<String, String> {
