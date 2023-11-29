@@ -19,11 +19,17 @@ fn get_container_engine() -> String {
 fn build_container() {
     let container_engine = get_container_engine();
     let result = Command::new(container_engine.clone())
-        .args(&["build", "-f", "rvpkg-tests/Containerfile", "-t", "rvpkg-tests", ".."])
+        .args(&[
+            "build",
+            "-f",
+            "rvpkg-tests/Containerfile",
+            "-t",
+            "rvpkg-tests",
+            "..",
+        ])
         .output()
         .expect(format!("Failed to run {}", container_engine).as_str());
     if !result.status.success() {
         panic!("Failed to build container");
     }
 }
-

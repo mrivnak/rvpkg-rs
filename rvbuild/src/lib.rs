@@ -1,12 +1,12 @@
+use crate::package::{Package, PackageArchitecture};
 use std::collections::HashMap;
 use std::error::Error;
 use std::fs;
 use std::path::Path;
-use crate::package::{Package, PackageArchitecture};
 
-pub mod package;
 mod build;
 mod command;
+pub mod package;
 
 pub fn read_package(path: &Path) -> Result<Package, Box<dyn Error>> {
     let toml_str = fs::read_to_string(path)?;
@@ -17,8 +17,16 @@ pub fn read_package(path: &Path) -> Result<Package, Box<dyn Error>> {
 
 fn validate(package: &Package) -> Result<(), anyhow::Error> {
     // Must be 'any' or a list of valid architectures
-    if package.definition.architectures.len() > 1 && package.definition.architectures.iter().any(|a| matches!(a, PackageArchitecture::Any)) {
-        return Err(anyhow::anyhow!("package definition architecture cannot contain 'any' and other values"));
+    if package.definition.architectures.len() > 1
+        && package
+            .definition
+            .architectures
+            .iter()
+            .any(|a| matches!(a, PackageArchitecture::Any))
+    {
+        return Err(anyhow::anyhow!(
+            "package definition architecture cannot contain 'any' and other values"
+        ));
     }
 
     Ok(())
@@ -26,9 +34,7 @@ fn validate(package: &Package) -> Result<(), anyhow::Error> {
 
 pub fn insert_variables(package: &mut Package) {
     let outdir = format!("/var/tmp/rvbuild/{}", package.definition.name);
-    let variables = HashMap::from([
-        ("$OUTDIR", outdir.as_str())
-    ]);
+    let variables = HashMap::from([("$OUTDIR", outdir.as_str())]);
 
     for (key, value) in variables {
         match package.build.prepare {

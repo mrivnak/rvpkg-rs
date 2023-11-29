@@ -1,8 +1,8 @@
-use std::collections::HashMap;
 use http::Uri;
 use nonempty::NonEmpty;
 use semver::Version;
 use serde::Deserialize;
+use std::collections::HashMap;
 
 #[derive(Deserialize)]
 pub struct Package {

@@ -2,7 +2,8 @@ use std::ffi::OsStr;
 use std::process::Command;
 
 fn create_commands(commands: &str) -> Vec<Command> {
-    commands.lines()
+    commands
+        .lines()
         .map(|l| l.trim())
         .filter(|l| !l.is_empty())
         .map(|l| {
@@ -11,7 +12,8 @@ fn create_commands(commands: &str) -> Vec<Command> {
             let mut command = Command::new(cmd);
             command.args(args);
             command
-        }).collect()
+        })
+        .collect()
 }
 
 #[test]

@@ -76,15 +76,21 @@ mod tests {
 
         match result {
             Ok(output) => {
-                let rvpkg_config = toml::from_str::<toml::Value>(include_str!("../../rvpkg/Cargo.toml")).unwrap();
+                let rvpkg_config =
+                    toml::from_str::<toml::Value>(include_str!("../../rvpkg/Cargo.toml")).unwrap();
 
                 let name = rvpkg_config["package"]["name"].as_str().unwrap();
                 let version = rvpkg_config["package"]["version"].as_str().unwrap();
 
                 let expected = format!("{} {}\n", name, version);
-                assert!(output == expected, "Expected: {}\nGot: {}", expected, output);
+                assert!(
+                    output == expected,
+                    "Expected: {}\nGot: {}",
+                    expected,
+                    output
+                );
             }
-            Err(e) => panic!("{}", e)
+            Err(e) => panic!("{}", e),
         }
     }
 }
